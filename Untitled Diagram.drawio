@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2022-07-04T17:27:20.799Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="vCKln_ss75dBdLTl07ip" version="20.0.4" type="github" pages="2">
+<mxfile host="app.diagrams.net" modified="2022-07-04T17:57:37.589Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="DeK22tD4r6Wq8VpyCDmW" version="20.0.4" type="github" pages="3">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="782" dy="428" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="868" dy="450" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -61,7 +61,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="EiNi7dC1YrHyzPnDRAL1" name="mockup">
-    <mxGraphModel dx="782" dy="428" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="868" dy="450" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -74,14 +74,34 @@
         <mxCell id="X4_AbXHLpoOwDHx-9JOI-3" value="https://www.draw.io" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.anchor;rSize=0;fontSize=17;fontColor=#666666;align=left;" parent="X4_AbXHLpoOwDHx-9JOI-1" vertex="1">
           <mxGeometry x="130" y="60" width="250" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="W8P_1YIGOtaXKpAQaV6Y-2" value="" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="X4_AbXHLpoOwDHx-9JOI-1">
+        <mxCell id="W8P_1YIGOtaXKpAQaV6Y-2" value="" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" parent="X4_AbXHLpoOwDHx-9JOI-1" vertex="1">
           <mxGeometry x="400" y="160" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="W8P_1YIGOtaXKpAQaV6Y-1" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+        <mxCell id="W8P_1YIGOtaXKpAQaV6Y-1" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
           <mxGeometry x="50" y="210" width="60" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="r3F8tO3WwBn7Ss0mZ74w-1" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="r3F8tO3WwBn7Ss0mZ74w-1" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="30" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="a8-go42t1K4IB6UZZ8qH" name="diagrama de fluji">
+    <mxGraphModel dx="868" dy="450" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-1" value="Pool" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;horizontal=1;startSize=20;horizontalStack=0;" vertex="1" parent="1">
+          <mxGeometry x="190" y="80" width="480" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-2" value="Lane 1" style="swimlane;startSize=20;horizontal=0;" vertex="1" parent="_P9K7C3eFYIOLjbkXX4V-1">
+          <mxGeometry y="20" width="480" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-3" value="Lane 2" style="swimlane;startSize=20;horizontal=0;" vertex="1" parent="_P9K7C3eFYIOLjbkXX4V-1">
+          <mxGeometry y="140" width="480" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-4" value="Lane 3" style="swimlane;startSize=20;horizontal=0;" vertex="1" parent="_P9K7C3eFYIOLjbkXX4V-1">
+          <mxGeometry y="260" width="480" height="120" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
