@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-07-05T23:06:47.680Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="n0mvWdH98BsW6VFAOBCI" version="20.0.4" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2022-07-06T21:03:03.821Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="FHIXXxKdrmJrfqQh-yJF" version="20.0.4" type="github" pages="7">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -352,7 +352,7 @@
             <mxPoint x="340" y="574" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="6TgBuLALcDRJESAb5uaZ-3" value="Revisión de Pruebas Diagnosticas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
+        <mxCell id="6TgBuLALcDRJESAb5uaZ-3" value="Consulta de Pruebas Diagnosticas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
           <mxGeometry x="330" y="799" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="6TgBuLALcDRJESAb5uaZ-4" value="Esta actividad indica el retorno al modulo de Consultas donde el Doctor solicitante revisa las pruebas solicitadas al laboratorio o Imagen." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
