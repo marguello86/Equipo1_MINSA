@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-07-06T21:03:03.821Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="FHIXXxKdrmJrfqQh-yJF" version="20.0.4" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2022-07-07T16:59:19.574Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="R09xLd2l3Q9Otaybz6TB" version="20.0.4" type="github" pages="7">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -96,32 +96,32 @@
     </mxGraphModel>
   </diagram>
   <diagram id="a8-go42t1K4IB6UZZ8qH" name="diagrama de fluji">
-    <mxGraphModel dx="868" dy="450" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="_P9K7C3eFYIOLjbkXX4V-1" value="Pool" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;horizontal=1;startSize=20;horizontalStack=0;" vertex="1" parent="1">
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-1" value="Pool" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;horizontal=1;startSize=20;horizontalStack=0;" parent="1" vertex="1">
           <mxGeometry x="190" y="80" width="480" height="380" as="geometry" />
         </mxCell>
-        <mxCell id="_P9K7C3eFYIOLjbkXX4V-2" value="Lane 1" style="swimlane;startSize=20;horizontal=0;" vertex="1" parent="_P9K7C3eFYIOLjbkXX4V-1">
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-2" value="Lane 1" style="swimlane;startSize=20;horizontal=0;" parent="_P9K7C3eFYIOLjbkXX4V-1" vertex="1">
           <mxGeometry y="20" width="480" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="_P9K7C3eFYIOLjbkXX4V-3" value="Lane 2" style="swimlane;startSize=20;horizontal=0;" vertex="1" parent="_P9K7C3eFYIOLjbkXX4V-1">
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-3" value="Lane 2" style="swimlane;startSize=20;horizontal=0;" parent="_P9K7C3eFYIOLjbkXX4V-1" vertex="1">
           <mxGeometry y="140" width="480" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="_P9K7C3eFYIOLjbkXX4V-4" value="Lane 3" style="swimlane;startSize=20;horizontal=0;" vertex="1" parent="_P9K7C3eFYIOLjbkXX4V-1">
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-4" value="Lane 3" style="swimlane;startSize=20;horizontal=0;" parent="_P9K7C3eFYIOLjbkXX4V-1" vertex="1">
           <mxGeometry y="260" width="480" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="_P9K7C3eFYIOLjbkXX4V-5" value="" style="shape=delay;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-5" value="" style="shape=delay;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="70" y="140" width="80" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="_P9K7C3eFYIOLjbkXX4V-6" value="" style="shape=offPageConnector;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-6" value="" style="shape=offPageConnector;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="720" y="40" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="_P9K7C3eFYIOLjbkXX4V-7" value="" style="shape=loopLimit;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-7" value="" style="shape=loopLimit;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="710" y="170" width="100" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="_P9K7C3eFYIOLjbkXX4V-8" value="" style="shape=manualInput;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="_P9K7C3eFYIOLjbkXX4V-8" value="" style="shape=manualInput;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="70" y="300" width="80" height="80" as="geometry" />
         </mxCell>
       </root>
@@ -282,7 +282,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Diagrama de Laboratorio" id="5OnZy8I1DerMemIDZ4Z2">
-    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1185" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="z8_920ZuaEv_8N6seaUg-0" />
         <mxCell id="z8_920ZuaEv_8N6seaUg-1" parent="z8_920ZuaEv_8N6seaUg-0" />
@@ -352,7 +352,7 @@
             <mxPoint x="340" y="574" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="6TgBuLALcDRJESAb5uaZ-3" value="Consulta de Pruebas Diagnosticas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
+        <mxCell id="6TgBuLALcDRJESAb5uaZ-3" value="Visualización de Pruebas Diagnosticas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
           <mxGeometry x="330" y="799" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="6TgBuLALcDRJESAb5uaZ-4" value="Esta actividad indica el retorno al modulo de Consultas donde el Doctor solicitante revisa las pruebas solicitadas al laboratorio o Imagen." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
@@ -498,7 +498,7 @@
             <mxPoint x="400" y="519" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="hlDgstGDT7UcF94J40AT-7" value="Entrega de Resumen Clínico" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
+        <mxCell id="hlDgstGDT7UcF94J40AT-7" value="Entrega de Resumen Clínico al secretario/a" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
           <mxGeometry x="470" y="199" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="hlDgstGDT7UcF94J40AT-8" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="hlDgstGDT7UcF94J40AT-1" source="hlDgstGDT7UcF94J40AT-5" target="hlDgstGDT7UcF94J40AT-7" edge="1">
