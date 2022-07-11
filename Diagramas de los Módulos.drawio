@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-07-11T21:02:49.235Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="lQtUB6kUMqDnOo1tJA0W" version="20.0.4" type="github" pages="14">
+<mxfile host="app.diagrams.net" modified="2022-07-11T21:03:35.137Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="U3cCGdK2bwUv1wf52mj7" version="20.0.4" type="github" pages="14">
   <diagram id="j-XA8UHWb0GREC0O_p5o" name="diagrama de componentes">
     <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -1295,7 +1295,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="qYuvShQ5U35rnFKQQjsR-1" value="Responsable&lt;br&gt;Laboratorio" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
-          <mxGeometry x="980" y="555" width="30" height="60" as="geometry" />
+          <mxGeometry x="970" y="570" width="30" height="60" as="geometry" />
         </mxCell>
         <mxCell id="qYuvShQ5U35rnFKQQjsR-3" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.979;exitY=0.643;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="Y_N0G_v6Ph_r53Tg-Ugn-20" target="qYuvShQ5U35rnFKQQjsR-1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
