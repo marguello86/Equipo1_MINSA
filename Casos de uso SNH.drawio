@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-07-12T19:50:11.693Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="IzYBI_tJ3wZ9oFxahZXA" version="20.0.4" type="github" pages="8">
+<mxfile host="app.diagrams.net" modified="2022-07-12T20:29:40.261Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="o7j5xdmTxFmnA9fp5AGl" version="20.0.4" type="github" pages="8">
   <diagram id="iO2c2UKgL1aBnviRLH2T" name="CDU HCPediatrica">
     <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -26,16 +26,13 @@
           <mxGeometry x="234" y="660" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="s9VvMOrujGrFszEcUhTj-7" value="Registro de Desarrollo Psicomotor" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="654" y="470" width="140" height="70" as="geometry" />
+          <mxGeometry x="680" y="420" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="s9VvMOrujGrFszEcUhTj-8" value="Registro de Antecedentes patológicos" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="604" y="590" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="s9VvMOrujGrFszEcUhTj-10" value="Consulta de Esquema de Vacunación (SIPAI)" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="54" y="280" width="140" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="s9VvMOrujGrFszEcUhTj-11" value="Registro de Antecedentes personales" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="654" y="360" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="s9VvMOrujGrFszEcUhTj-12" value="Registro de Examen Físico" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="424" y="650" width="140" height="70" as="geometry" />
@@ -62,12 +59,6 @@
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="381.30278744141424" y="544.8048426871765" as="sourcePoint" />
             <mxPoint x="464" y="760" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="s9VvMOrujGrFszEcUhTj-18" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" parent="1" source="s9VvMOrujGrFszEcUhTj-2" target="s9VvMOrujGrFszEcUhTj-11" edge="1">
-          <mxGeometry width="160" relative="1" as="geometry">
-            <mxPoint x="654" y="400" as="sourcePoint" />
-            <mxPoint x="814" y="400" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="s9VvMOrujGrFszEcUhTj-19" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" parent="1" source="s9VvMOrujGrFszEcUhTj-2" target="s9VvMOrujGrFszEcUhTj-7" edge="1">
