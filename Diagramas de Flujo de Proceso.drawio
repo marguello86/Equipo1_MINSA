@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-07-13T17:05:55.826Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="lLWhjApMLhG5eTjQUj4l" version="20.1.1" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2022-07-13T17:15:16.379Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="WNmcka4nZ_uobCI2JRQ_" version="20.1.1" type="github" pages="3">
   <diagram id="0FJG1oKvQnxuFDeffio4" name="Diagrama de Flujo de Historia Clinica">
     <mxGraphModel dx="1422" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -390,10 +390,10 @@
             <mxPoint x="400" y="519" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="hlDgstGDT7UcF94J40AT-7" value="Entrega y adjunto de Resumen Clínico al secretario/a" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
+        <mxCell id="hlDgstGDT7UcF94J40AT-7" value="Entrega y adjunto de Resumen Clínico al usuario solicitante" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
           <mxGeometry x="665" y="199" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="bEszRZ09aemgjHRM_qUU-0" value="En esta solicitud se ingresa un comprobante que permita justificar el porque se requiere este Resumen Clínico." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
+        <mxCell id="bEszRZ09aemgjHRM_qUU-0" value="En esta solicitud se ingresa un comprobante que permita justificar el porque se requiere este Resumen Clínico." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
           <mxGeometry x="110" y="325" width="140" height="80" as="geometry" />
         </mxCell>
         <mxCell id="bEszRZ09aemgjHRM_qUU-1" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="hlDgstGDT7UcF94J40AT-1" source="hlDgstGDT7UcF94J40AT-3" target="bEszRZ09aemgjHRM_qUU-0" edge="1">
@@ -402,8 +402,8 @@
             <mxPoint x="340" y="90" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="bEszRZ09aemgjHRM_qUU-2" value="Esta actividad representa la entrega del comprobante impreso y firmado por la dirección del puesto de salud, hospital primario u hospital general, que deberá adjuntar como comprobante de gestión." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
-          <mxGeometry x="650" y="310" width="150" height="110" as="geometry" />
+        <mxCell id="bEszRZ09aemgjHRM_qUU-2" value="Esta actividad representa la entrega del comprobante impreso y firmado por la dirección de la Unidad de Salud visitada por el Paciente, que deberá adjuntar como comprobante de gestión." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
+          <mxGeometry x="650" y="310" width="150" height="120" as="geometry" />
         </mxCell>
         <mxCell id="bEszRZ09aemgjHRM_qUU-3" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="hlDgstGDT7UcF94J40AT-1" source="hlDgstGDT7UcF94J40AT-7" target="bEszRZ09aemgjHRM_qUU-2" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -420,7 +420,7 @@
             <mxPoint x="825" y="519" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="bEszRZ09aemgjHRM_qUU-6" value="Esta actividad complementaria de la anterior, indica en subir comprobante de Resumen Clínico, para conservar esta información como parte de Historia Clínica del Paciente." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
+        <mxCell id="bEszRZ09aemgjHRM_qUU-6" value="En esta actividad se confirma la entrega del comprobante Resumen Clínico al paciente. En caso que el paciente no llegue a retirar el documento. El solicitante deberá dar de baja a esta gestión." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
           <mxGeometry x="827" y="30" width="157" height="115" as="geometry" />
         </mxCell>
         <mxCell id="bEszRZ09aemgjHRM_qUU-7" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="hlDgstGDT7UcF94J40AT-1" source="bEszRZ09aemgjHRM_qUU-4" target="bEszRZ09aemgjHRM_qUU-6" edge="1">
@@ -430,12 +430,12 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="tA8QjtumY9n4jwZHCtsi-0" value="Fin" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
-          <mxGeometry x="875.5" y="320" width="60" height="60" as="geometry" />
+          <mxGeometry x="1020" y="470" width="60" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="tA8QjtumY9n4jwZHCtsi-1" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="hlDgstGDT7UcF94J40AT-1" source="bEszRZ09aemgjHRM_qUU-4" target="tA8QjtumY9n4jwZHCtsi-0" edge="1">
+        <mxCell id="tA8QjtumY9n4jwZHCtsi-1" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="hlDgstGDT7UcF94J40AT-1" source="bEszRZ09aemgjHRM_qUU-4" target="y5845vFTgbnhoce5JEZf-0" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="508.5" y="470" as="sourcePoint" />
-            <mxPoint x="558.5" y="420" as="targetPoint" />
+            <mxPoint x="906" y="300" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="mdSmi9klLpFlQdSg6GB_-0" value="Elaboración de Resumen Clínico" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="hlDgstGDT7UcF94J40AT-1" vertex="1">
@@ -451,6 +451,36 @@
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="510" y="410" as="sourcePoint" />
             <mxPoint x="560" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5845vFTgbnhoce5JEZf-0" value="¿El paciente retiró el comprobante de Resumen Clínico?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="hlDgstGDT7UcF94J40AT-1">
+          <mxGeometry x="827" y="315" width="160" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="y5845vFTgbnhoce5JEZf-1" value="" style="endArrow=classic;html=1;rounded=0;fontSize=13;" edge="1" parent="hlDgstGDT7UcF94J40AT-1" source="y5845vFTgbnhoce5JEZf-0" target="tA8QjtumY9n4jwZHCtsi-0">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="380" as="sourcePoint" />
+            <mxPoint x="750" y="330" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1050" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5845vFTgbnhoce5JEZf-2" value="Baja de la Gestión" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="hlDgstGDT7UcF94J40AT-1">
+          <mxGeometry x="845.5" y="550" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="y5845vFTgbnhoce5JEZf-3" value="" style="endArrow=classic;html=1;rounded=0;fontSize=13;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="hlDgstGDT7UcF94J40AT-1" source="y5845vFTgbnhoce5JEZf-0" target="y5845vFTgbnhoce5JEZf-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="490" as="sourcePoint" />
+            <mxPoint x="750" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5845vFTgbnhoce5JEZf-4" value="" style="endArrow=classic;html=1;rounded=0;fontSize=13;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="hlDgstGDT7UcF94J40AT-1" source="y5845vFTgbnhoce5JEZf-2" target="tA8QjtumY9n4jwZHCtsi-0">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="490" as="sourcePoint" />
+            <mxPoint x="750" y="440" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1050" y="580" />
+            </Array>
           </mxGeometry>
         </mxCell>
       </root>
