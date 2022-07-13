@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-07-13T16:52:02.248Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="ICpYrzo7FVSSFgA-MKxN" version="20.1.1" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2022-07-13T17:05:55.826Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="lLWhjApMLhG5eTjQUj4l" version="20.1.1" type="github" pages="3">
   <diagram id="0FJG1oKvQnxuFDeffio4" name="Diagrama de Flujo de Historia Clinica">
     <mxGraphModel dx="1422" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -137,7 +137,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Diagrama de Laboratorio" id="5OnZy8I1DerMemIDZ4Z2">
-    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1422" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="z8_920ZuaEv_8N6seaUg-0" />
         <mxCell id="z8_920ZuaEv_8N6seaUg-1" parent="z8_920ZuaEv_8N6seaUg-0" />
@@ -171,7 +171,7 @@
             <mxPoint x="419" y="370" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="z8_920ZuaEv_8N6seaUg-15" value="Solicitud de Prueba Diagnostica (Laboratorio o Imagen)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
+        <mxCell id="z8_920ZuaEv_8N6seaUg-15" value="Solicitud de Examen Clínico (Laboratorio o Imagen)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
           <mxGeometry x="489" y="179" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="z8_920ZuaEv_8N6seaUg-17" value="Recepción solicitud" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
@@ -210,7 +210,7 @@
         <mxCell id="6TgBuLALcDRJESAb5uaZ-3" value="Visualización de Pruebas Diagnosticas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
           <mxGeometry x="342" y="939" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="6TgBuLALcDRJESAb5uaZ-4" value="Esta actividad indica el retorno al modulo de Consultas donde el Doctor solicitante revisa las pruebas solicitadas al laboratorio o Imagen." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
+        <mxCell id="6TgBuLALcDRJESAb5uaZ-4" value="Esta actividad indica el retorno al modulo de Consultas donde el Doctor solicitante revisa las pruebas solicitadas al laboratorio o Imagen." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="z8_920ZuaEv_8N6seaUg-1" vertex="1">
           <mxGeometry x="310" y="1044" width="180" height="80" as="geometry" />
         </mxCell>
         <mxCell id="6TgBuLALcDRJESAb5uaZ-5" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;entryX=0.45;entryY=1.017;entryDx=0;entryDy=0;entryPerimeter=0;" parent="z8_920ZuaEv_8N6seaUg-1" source="6TgBuLALcDRJESAb5uaZ-4" target="6TgBuLALcDRJESAb5uaZ-3" edge="1">
@@ -343,11 +343,29 @@
             </Array>
           </mxGeometry>
         </mxCell>
+        <mxCell id="NH4QSwAOY9NdlBQoGGBY-0" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 13px; background-color: initial;&quot;&gt;En esta actividad, se segregan las solicitudes de examen clínico en la recepción de la unidad correspondiente (Laboratorio o Imágenes).&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="z8_920ZuaEv_8N6seaUg-1">
+          <mxGeometry x="665" y="220" width="150" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="NH4QSwAOY9NdlBQoGGBY-4" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 13px; background-color: initial;&quot;&gt;En esta actividad, se realizan las cargas de los archivos resultados de los exámenes clínicos de Laboratorio o Imágenes.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="z8_920ZuaEv_8N6seaUg-1">
+          <mxGeometry x="650" y="840" width="146" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="NH4QSwAOY9NdlBQoGGBY-6" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;fontSize=13;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="z8_920ZuaEv_8N6seaUg-1" source="NH4QSwAOY9NdlBQoGGBY-4" target="z8_920ZuaEv_8N6seaUg-22">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="1110" as="sourcePoint" />
+            <mxPoint x="440" y="1060" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NH4QSwAOY9NdlBQoGGBY-7" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;fontSize=13;exitX=0.007;exitY=0.418;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="z8_920ZuaEv_8N6seaUg-1" source="NH4QSwAOY9NdlBQoGGBY-0" target="z8_920ZuaEv_8N6seaUg-15">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="310" as="sourcePoint" />
+            <mxPoint x="440" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
   <diagram name="Diagrama de Solicitud Resumen Clinico" id="vJsOqkEl4zHwaD4wMcVJ">
-    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1422" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="hlDgstGDT7UcF94J40AT-0" />
         <mxCell id="hlDgstGDT7UcF94J40AT-1" parent="hlDgstGDT7UcF94J40AT-0" />
