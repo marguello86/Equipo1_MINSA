@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-07-15T17:20:12.459Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="7nw7FhW8qaufP6fgaaZD" version="20.1.1" type="github" pages="5">
+<mxfile host="app.diagrams.net" modified="2022-07-15T17:33:55.068Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="d4YBx46dI7UKTeE0bMJR" version="20.1.1" type="github" pages="5">
   <diagram id="0FJG1oKvQnxuFDeffio4" name="Diagrama de Flujo de Historia Clinica">
     <mxGraphModel dx="1422" dy="749" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -551,10 +551,10 @@
             <mxPoint x="419" y="370" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="caO1nfEgVow9OtLrVk6P-9" value="Solicitud de Examen Clínico (Laboratorio o Imagen)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
+        <mxCell id="caO1nfEgVow9OtLrVk6P-9" value="Elaboración manual de solicitud de examen" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
           <mxGeometry x="489" y="179" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="caO1nfEgVow9OtLrVk6P-10" value="Recepción solicitud" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
+        <mxCell id="caO1nfEgVow9OtLrVk6P-10" value="Recepción solicitudes de examan manuales" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
           <mxGeometry x="489" y="288" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="caO1nfEgVow9OtLrVk6P-11" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="caO1nfEgVow9OtLrVk6P-1" source="caO1nfEgVow9OtLrVk6P-9" target="caO1nfEgVow9OtLrVk6P-10">
@@ -587,17 +587,8 @@
             <mxPoint x="319" y="574" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="caO1nfEgVow9OtLrVk6P-18" value="Visualización de Pruebas Diagnosticas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
+        <mxCell id="caO1nfEgVow9OtLrVk6P-18" value="Atención del medico al paciente después de lectura de exámenes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
           <mxGeometry x="342" y="939" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="caO1nfEgVow9OtLrVk6P-19" value="Esta actividad indica el retorno al modulo de Consultas donde el Doctor solicitante revisa las pruebas solicitadas al laboratorio o Imagen." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
-          <mxGeometry x="310" y="1044" width="180" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="caO1nfEgVow9OtLrVk6P-20" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;entryX=0.45;entryY=1.017;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="caO1nfEgVow9OtLrVk6P-1" source="caO1nfEgVow9OtLrVk6P-19" target="caO1nfEgVow9OtLrVk6P-18">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="370" y="769" as="sourcePoint" />
-            <mxPoint x="370" y="1009" as="targetPoint" />
-          </mxGeometry>
         </mxCell>
         <mxCell id="caO1nfEgVow9OtLrVk6P-21" value="¿El paciente requiere mas pruebas Diagnosticas?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
           <mxGeometry x="110" y="889" width="160" height="170" as="geometry" />
@@ -723,11 +714,11 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="caO1nfEgVow9OtLrVk6P-45" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 13px; background-color: initial;&quot;&gt;En esta actividad, se segregan las solicitudes de examen clínico en la recepción de la unidad correspondiente (Laboratorio o Imágenes).&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
+        <mxCell id="caO1nfEgVow9OtLrVk6P-45" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 13px;&quot;&gt;Esta actividad indica que el paciente llegó al Laboratorio o a recepción de pruebas por imagen a entregar la solicitud de examen personalmente.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
           <mxGeometry x="659" y="294" width="150" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="caO1nfEgVow9OtLrVk6P-46" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 13px; background-color: initial;&quot;&gt;En esta actividad, se realizan las cargas de los archivos resultados de los exámenes clínicos de Laboratorio o Imágenes.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
-          <mxGeometry x="650" y="840" width="146" height="90" as="geometry" />
+        <mxCell id="caO1nfEgVow9OtLrVk6P-46" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 13px; background-color: initial;&quot;&gt;En esta actividad, los responsables de laboratorio o de pruebas por imagen entregan los resultados físicos personalmente al médico solicitante.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="caO1nfEgVow9OtLrVk6P-1">
+          <mxGeometry x="639" y="820" width="170" height="110" as="geometry" />
         </mxCell>
         <mxCell id="caO1nfEgVow9OtLrVk6P-47" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;fontSize=13;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="caO1nfEgVow9OtLrVk6P-1" source="caO1nfEgVow9OtLrVk6P-46" target="caO1nfEgVow9OtLrVk6P-13">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
