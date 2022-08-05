@@ -1,139 +1,223 @@
-CREATE OR REPLACE PACKAGE BODY PKG_SNH_HISTORIA_CLINICA AS
-/****************************************************************************************************************************************************************************/
-FUNCTION FN_R_VALIDA_CATALOGO (pCodigoSup IN varchar2,pCodigo IN varchar2 ) RETURN NUMBER AS
-   catId  CATALOGOS.SBC_CAT_CATALOGOS.CATALOGO_ID%TYPE;
-   BEGIN
-      select C.CATALOGO_ID INTO catId from CATALOGOS.SBC_CAT_CATALOGOS C
-      inner join CATALOGOS.SBC_CAT_CATALOGOS CS on C.CATALOGO_SUP=CS.CATALOGO_ID
-      WHERE C.CODIGO=pCodigo and CS.CODIGO=pCodigoSup;
-     RETURN catId;
-    EXCEPTION
-     WHEN NO_DATA_FOUND THEN
-     RAISE_APPLICATION_ERROR ( -20999 , 'ORA-'||SQLCODE||' VALOR DE CATALOGO NO ENCONTRADO pCodigoSup:'||pCodigoSup||', pCodigo:'||pCodigo , TRUE );
-   END  FN_R_VALIDA_CATALOGO;
+CREATE OR REPLACE PACKAGE HOSPITALARIO."PKG_SNH_HISTORIA_CLINICA"
+    AUTHID CURRENT_USER
+AS
+    eSalidaConError EXCEPTION;
+    eParametroNull EXCEPTION;
+    eParametrosInvalidos EXCEPTION;
+    eRegistroExiste EXCEPTION;
+    eRegistroNoExiste EXCEPTION;
 
-/****************************************************************************************************************************************************************************/
-PROCEDURE SNH_C_HISTORIA_CLINICA    (
-                                                                         -- pHistoriaId IN OUT HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.HISTORIA_CLINICA_ID%TYPE,
-                                                                          pAdmisionServicioId IN HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.ADMISION_SERVICIO_ID%TYPE,
-                                                                          pTipoHistoria in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.TIPO_HISTORIA%TYPE,
-                                                                          pExpedienteId in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.EXPEDIENTE_ID%TYPE,
-                                                                          pUnidadSalud in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.UNIDAD_SALUD_ID%TYPE,
-                                                                          pPersonalSalud in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.PERSONAL_SALUD_ID%TYPE,
-                                                                          pDivisionId in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.DIVISIONP_ID%TYPE,
-                                                                          pEstadoRegistro in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.ESTADO_REGISTRO%TYPE,
-                                                                          pUsuarioRegistro in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_REGISTRO%TYPE,
-                                                                          pFechaRegistro in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_REGISTRO%TYPE,
-                                                                          --pTipoOperacion     IN VARCHAR2,
-                                                                         pRegistro          OUT var_refcursor,     
-                                                                          pMsgError          OUT  VARCHAR2,
-                                                                          pResultado         OUT VARCHAR2
-                                                                        ) AS
-    BEGIN
-            
-        ---    pEstado:=FN_R_ID_CATALOGO (K_STATE_REG,K_CAT_REG_ACT);---Pendiente consulta los valores de donde se extraen
+    TYPE VAR_REFCURSOR IS REF CURSOR;
 
-INSERT  INTO HOSPITALARIO.SNH_MST_HISTORIA_CLINICA   (
-                                                                                                ADMISION_SERVICIO_ID,
-                                                                                                TIPO_HISTORIA,
-                                                                                                EXPEDIENTE_ID,
-                                                                                                UNIDAD_SALUD_ID,
-                                                                                                PERSONAL_SALUD_ID,
-                                                                                                DIVISIONP_ID,
-                                                                                                ESTADO_REGISTRO,
-                                                                                                USUARIO_REGISTRO,
-                                                                                                FECHA_REGISTRO                                                                                         
-                                                                                                  )
-VALUES                                                                                    (
-                                                                                                pAdmisionServicioId,
-                                                                                                pTipoHistoria,
-                                                                                                pExpedienteId,
-                                                                                                pUnidadSalud,
-                                                                                                pPersonalSalud,
-                                                                                                pDivisionId,
-                                                                                                pEstadoRegistro,
-                                                                                                pUsuarioRegistro,
-                                                                                                pFechaRegistro
-                                                                                                );
-    pResultado:='RESULTADO CREADO SATISFACTORIAMENTE';
-            
-            EXCEPTION
-        WHEN OTHERS THEN
-        pResultado:='ERROR INESPERADO';
-        pMsgError:=/*vFirma|| */pResultado|| SQLERRM; 
-        --pMsgError:=pResultado; 
-        END SNH_C_HISTORIA_CLINICA;
+    KINSERT CONSTANT CHAR (1) := 'I';
+    KUPDATE CONSTANT CHAR (1) := 'U';
+    KDELETE CONSTANT CHAR (1) := 'D';
+    KCONSULTAR CONSTANT CHAR (1) := 'C';
+    K_CAT_REG_ACT  CHAR (6) := 'ACTREG';
+    K_CAT_REG_PAS  CHAR (6) := 'PASREG';
+    K_CAT_REG_DEL  CHAR (6) := 'DELREG';
+    K_STATE_REG    CHAR (5) := 'STREG';
 
-/****************************************************************************************************************************************************************************/
-    PROCEDURE SNH_CRUD_HISTORIA_CLINICA   (
-                                                                          --pHistoriaId IN OUT HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.HISTORIA_CLINICA_ID%TYPE,
-                                                                          pAdmisionServicioId IN HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.ADMISION_SERVICIO_ID%TYPE,
-                                                                          pTipoHistoria in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.TIPO_HISTORIA%TYPE,
-                                                                          pExpedienteId in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.EXPEDIENTE_ID%TYPE,
-                                                                          pUnidadSalud in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.UNIDAD_SALUD_ID%TYPE,
-                                                                          pPersonalSalud in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.PERSONAL_SALUD_ID%TYPE,
-                                                                          pDivisionId in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.DIVISIONP_ID%TYPE,
-                                                                          pEstadoRegistro in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.ESTADO_REGISTRO%TYPE,
-                                                                          pUsuarioRegistro in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_REGISTRO%TYPE,
-                                                                          pFechaRegistro in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_REGISTRO%TYPE,
-                                                                          pUsuarioModificacion in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
-                                                                          pFechaModificacion in  HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_MODIFICACION%TYPE,
-                                                                          pTipoOperacion     IN VARCHAR2,
-                                                                          pRegistro          OUT var_refcursor,     
-                                                                          pMsgError          OUT  VARCHAR2,
-                                                                          pResultado         OUT VARCHAR2
-                                                                  
+    FUNCTION FN_R_VALIDA_CATALOGO (pCodigoSup     IN VARCHAR2,
+                                   pCodigo        IN VARCHAR2)
+        RETURN NUMBER;
 
-                                                                        ) AS
-    BEGIN
-        CASE 
-                WHEN pTipoOperacion IS NULL THEN  
-                pResultado:='No se ha indicado el tipo de operacion';   
-                RAISE eParametroNull;
-            
-                WHEN pTipoOperacion=kINSERT THEN 
-                            SNH_C_HISTORIA_CLINICA  ( 
-                                                                       --pHistoriaId =>pHistoriaId,
-                                                                       pAdmisionServicioId=>pAdmisionServicioId,
-                                                                       pTipoHistoria=>pTipoHistoria,
-                                                                       pExpedienteId=>pExpedienteId,
-                                                                       pUnidadSalud=>pUnidadSalud,
-                                                                       pPersonalSalud=>pPersonalSalud,
-                                                                       pDivisionId=>pDivisionId,
-                                                                       pEstadoRegistro=>pEstadoRegistro,
-                                                                       pUsuarioRegistro=>pUsuarioRegistro,
-                                                                       pFechaRegistro=>pFechaRegistro,
-                                                                       pRegistro        =>pRegistro,
-                                                                       pMsgError=>pMsgError,
-                                                                       pResultado=>pResultado
-                                                                        );
-                CASE WHEN   pMsgError IS NOT NULL THEN
-                    RAISE  eSalidaConError; 
-                    ELSE NULL;                        
-                    END CASE;  
-                    
-               ELSE
-                            pResultado := 'EL PARÁMETRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
-                            RAISE eParametrosInvalidos;
-                            END CASE;
+    PROCEDURE SNH_C_HISTORIA_CLINICA (
+        pAdmisionServicioId IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.ADMISION_SERVICIO_ID%TYPE,
+        pTipoHistoria       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.TIPO_HISTORIA%TYPE,
+        pExpedienteId       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.EXPEDIENTE_ID%TYPE,
+        pUnidadSalud        IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.UNIDAD_SALUD_ID%TYPE,
+        pPersonalSalud      IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.PERSONAL_SALUD_ID%TYPE,
+        pDivisionId         IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.DIVISIONP_ID%TYPE,
+		pFechaHistoria      IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_HISTORIA%TYPE,
+        pUsuarioRegistro    IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_REGISTRO%TYPE,
+        pFechaRegistro      IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_REGISTRO%TYPE,
+        pRegistro           OUT VAR_REFCURSOR,
+        pMsgError           OUT VARCHAR2,
+        pResultado          OUT VARCHAR2);
 
-             CASE WHEN  pMsgError IS NOT NULL THEN
-                RAISE eSalidaConError;
-             ELSE NULL;
-             END CASE;
-        EXCEPTION        
-     WHEN eSalidaConError THEN            
-           pResultado := /* vFirma  ||*/ pResultado;
-           pMsgError  := pResultado || pMsgError;
-     WHEN eParametrosInvalidos THEN
-           pResultado := /* vFirma  || */pResultado;
-           pMsgError  := pResultado;
-     WHEN OTHERS THEN
-           pResultado := /* vFirma  ||*/ 'Error no controlado' || pResultado;
-           pMsgError  := pResultado||' - '||SQLERRM;
-                                                                    
-END SNH_CRUD_HISTORIA_CLINICA;
-END  PKG_SNH_HISTORIA_CLINICA;
+    PROCEDURE SNH_CRUD_HISTORIA_CLINICA (
+        pHistoriaId          IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.HISTORIA_CLINICA_ID%TYPE,
+        pAdmisionServicioId  IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.ADMISION_SERVICIO_ID%TYPE,
+        pTipoHistoria        IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.TIPO_HISTORIA%TYPE,
+        pExpedienteId        IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.EXPEDIENTE_ID%TYPE,
+        pUnidadSalud         IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.UNIDAD_SALUD_ID%TYPE,
+        pPersonalSalud       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.PERSONAL_SALUD_ID%TYPE,
+        pDivisionId          IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.DIVISIONP_ID%TYPE,
+		pFechaHistoria       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_HISTORIA%TYPE,
+        pUsuarioRegistro     IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_REGISTRO%TYPE,
+        pFechaRegistro       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_REGISTRO%TYPE,
+        pUsuarioModificacion IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
+        pFechaModificacion   IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_MODIFICACION%TYPE,
+        pTipoOperacion       IN     VARCHAR2,
+        pRegistro            OUT VAR_REFCURSOR,
+        pMsgError            OUT VARCHAR2,
+        pResultado           OUT VARCHAR2);
 
+    PROCEDURE SNH_D_HISTORIA_CLINICA (
+        pHistoriaId          IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.HISTORIA_CLINICA_ID%TYPE,
+        pUsuarioModificacion IN HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
+        pResultado           OUT VARCHAR2,
+        pMsgError            OUT VARCHAR2);
 
+    PROCEDURE SNH_CRUD_DET_HISTORIA_CLINICA (
+        pDetHistoriaId       IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.DET_HISTORIA_CLINICA_ID%TYPE,
+        pHistoriaId          IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.HISTORIA_CLINICA_ID%TYPE,
+        pObservaciones       IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.OBSERVACIONES%TYPE,
+        pDiagnostico         IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.DIAGNOSTICO%TYPE,
+        pInterconsultas      IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.INTERCONSULTAS%TYPE,
+        pUsuarioRegistro     IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.USUARIO_REGISTRO%TYPE,
+        pFechaRegistro       IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.FECHA_REGISTRO%TYPE,
+        pUsuarioModificacion IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
+        pFechaModificacion   IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.FECHA_MODIFICACION%TYPE,
+        pTipoOperacion       VARCHAR2,
+        pRegistro            OUT    VAR_REFCURSOR,
+        pResultado           OUT VARCHAR2,
+        pMsgError            OUT VARCHAR2);
 
+    PROCEDURE SNH_C_DET_HISTORIA_CLINICA (
+        pHistoriaId      IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.HISTORIA_CLINICA_ID%TYPE,
+        pObservaciones   IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.OBSERVACIONES%TYPE,
+        pDiagnostico     IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.DIAGNOSTICO%TYPE,
+        pInterconsultas  IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.INTERCONSULTAS%TYPE,
+        pUsuarioRegistro IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.USUARIO_REGISTRO%TYPE,
+        pFechaRegistro   IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.FECHA_REGISTRO%TYPE,
+        pResultado       OUT VARCHAR2,
+        pMsgError        OUT VARCHAR2);
+
+    PROCEDURE SNH_U_DET_HISTORIA_CLINICA (
+        pDetHistoriaId       IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.DET_HISTORIA_CLINICA_ID%TYPE,
+        pHistoriaId          IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.HISTORIA_CLINICA_ID%TYPE,
+        pObservaciones       IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.OBSERVACIONES%TYPE,
+        pDiagnostico         IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.DIAGNOSTICO%TYPE,
+        pInterconsultas      IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.INTERCONSULTAS%TYPE,
+        pUsuarioModificacion IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
+        pFechaModificacion   IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.FECHA_MODIFICACION%TYPE,
+        pRegistro            OUT VAR_REFCURSOR,
+        pResultado           OUT VARCHAR2,
+        pMsgError            OUT VARCHAR2);
+
+    PROCEDURE SNH_D_DET_HISTORIA_CLINICA (
+        pDetHistoriaId       IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.DET_HISTORIA_CLINICA_ID%TYPE,
+        pUsuarioModificacion IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
+        pFechaModificacion   IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.FECHA_MODIFICACION%TYPE,
+        pResultado           OUT VARCHAR2,
+        pMsgError            OUT VARCHAR2);
+
+    PROCEDURE SNH_C_ANTECEDENTES_PARTO (
+        pAntecedentesId    IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.ANTE_PARTO_ID%TYPE,
+        pHistoriaClinicaId IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.HISTORIA_CLINICA_ID%TYPE,
+        pLugarParto        IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.LUGAR_PARTO%TYPE,
+        pFechaNacimiento   IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.FECHA_NACIMIENTO%TYPE,
+        pEdadGestacional   IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.EDAD_GESTACIONAL%TYPE,
+        pDuracionParto     IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.DURACION_PARTO%TYPE,
+        pAtencionParto     IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.ATENCION_PARTO%TYPE,
+        pVia               IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.VIA%TYPE,
+        pPresentacion      IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.PRESENTACION%TYPE,
+        pEventualidades    IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.EVENTUALIDADES%TYPE,
+        pUsuarioRegistro   IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.USUARIO_REGISTRO%TYPE,
+        pFechaRegistro     IN     HOSPITALARIO.SNH_MST_ANTE_PARTO.FECHA_REGISTRO%TYPE,
+        pMsgError         OUT VARCHAR2,
+        pResultado        OUT VARCHAR2);
+
+    PROCEDURE SNH_U_ANTECEDENTES_PARTO (
+        pAntecedentesId      IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.ANTE_PARTO_ID%TYPE,
+        pHistoriaClinicaId   IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.HISTORIA_CLINICA_ID%TYPE,
+        pLugarParto          IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.LUGAR_PARTO%TYPE,
+        pFechaNacimiento     IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.FECHA_NACIMIENTO%TYPE,
+        pEdadGestacional     IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.EDAD_GESTACIONAL%TYPE,
+        pDuracionParto       IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.DURACION_PARTO%TYPE,
+        pAtencionParto       IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.ATENCION_PARTO%TYPE,
+        pVia                 IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.VIA%TYPE,
+        pPresentacion        IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.PRESENTACION%TYPE,
+        pEventualidades      IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.EVENTUALIDADES%TYPE,
+        pUsuarioModificacion IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.USUARIO_MODIFICACION%TYPE,
+        pMsgError         OUT VARCHAR2,
+        pResultado        OUT VARCHAR2);
+
+    PROCEDURE SNH_D_ANTECEDENTES_PARTO (
+        pAntecedentesId      IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.ANTE_PARTO_ID%TYPE,
+        pUsuarioModificacion IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.USUARIO_MODIFICACION%TYPE,
+        pMsgError         OUT VARCHAR2,
+        pResultado        OUT VARCHAR2);
+
+    PROCEDURE SNH_CRUD_ANTECEDENTES_PARTO (
+        pAntecedentesId      IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.ANTE_PARTO_ID%TYPE,
+        pHistoriaClinicaId   IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.HISTORIA_CLINICA_ID%TYPE,
+        pLugarParto          IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.LUGAR_PARTO%TYPE,
+        pFechaNacimiento     IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.FECHA_NACIMIENTO%TYPE,
+        pEdadGestacional     IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.EDAD_GESTACIONAL%TYPE,
+        pDuracionParto       IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.DURACION_PARTO%TYPE,
+        pAtencionParto       IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.ATENCION_PARTO%TYPE,
+        pVia                 IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.VIA%TYPE,
+        pPresentacion        IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.PRESENTACION%TYPE,
+        pEventualidades      IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.EVENTUALIDADES%TYPE,
+        pUsuarioRegistro     IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.USUARIO_REGISTRO%TYPE,
+        pFechaRegistro       IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.FECHA_REGISTRO%TYPE,
+        pUsuarioModificacion IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.USUARIO_MODIFICACION%TYPE,
+        pFechaModificacion   IN    HOSPITALARIO.SNH_MST_ANTE_PARTO.FECHA_MODIFICACION%TYPE,
+        pTipoOperacion       IN     VARCHAR2,
+        pMsgError            OUT VARCHAR2,
+        pResultado           OUT VARCHAR2);
+     PROCEDURE SNH_C_MST_ANTE_POSTNATALES  (
+        pAntePostnatalesId     IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ANTE_POSTNATALES_ID%TYPE,
+        pHistoriaClinicaId     IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HISTORIA_CLINICA_ID%TYPE,
+        pApgar1                IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.APGAR1%TYPE,
+        pApgar5                IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.APGAR5%TYPE,
+        pPeso                  IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.PESO%TYPE,
+        pTalla                 IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TALLA%TYPE,
+        pAsfixia               IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
+        pDescripcionAsfixia    IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
+        pAlojamientoConjunto   IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ALOJAMIENTO_CONJUNTO%TYPE,
+        pTiempoMadre           IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TIEMPO_MADRE%TYPE,
+        pHorasMadre            IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HORAS_MADRE%TYPE,
+        pHospitalizacion       IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HOSPITALIZACION%TYPE,
+        pUsuarioRegistro       IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.USUARIO_REGISTRO%TYPE,
+        pFechaRegistro         IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.FECHA_REGISTRO%TYPE,
+        pResultado             OUT VARCHAR2,
+        pMsgError              OUT VARCHAR2
+       );
+     PROCEDURE  SNH_U_MST_ANTE_POSTNATALES  (
+        pAntePostnatalesId       IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ANTE_POSTNATALES_ID%TYPE,
+        pHistoriaClinicaId     IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HISTORIA_CLINICA_ID%TYPE,
+        pApgar1                IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.APGAR1%TYPE,
+        pApgar5                IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.APGAR5%TYPE,
+        pPeso                  IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.PESO%TYPE,
+        pTalla                 IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TALLA%TYPE,
+        pAsfixia               IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
+        pDescripcionAsfixia    IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
+        pAlojamientoConjunto   IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ALOJAMIENTO_CONJUNTO%TYPE,
+        pTiempoMadre           IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TIEMPO_MADRE%TYPE,
+        pHorasMadre            IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HORAS_MADRE%TYPE,
+        pHospitalizacion       IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HOSPITALIZACION%TYPE,
+        pUsuarioModificacion   IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.USUARIO_MODIFICACION%TYPE,
+        pResultado             OUT VARCHAR2,
+        pMsgError              OUT VARCHAR2
+        );
+     PROCEDURE SNH_D_MST_ANTE_POSTNATALES  (
+        pAntePostnatalesId       IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ANTE_POSTNATALES_ID%TYPE,
+        pUsuarioModificacion   IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.USUARIO_MODIFICACION%TYPE,
+        pResultado             OUT VARCHAR2,
+        pMsgError              OUT VARCHAR2
+        );
+     PROCEDURE SNH_CRUD_ANTE_POSTNATALES (
+        pAntePostnatalesId     IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ANTE_POSTNATALES_ID%TYPE,
+        pHistoriaClinicaId     IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HISTORIA_CLINICA_ID%TYPE,
+        pApgar1                IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.APGAR1%TYPE,
+        pApgar5                IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.APGAR5%TYPE,
+        pPeso                  IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.PESO%TYPE,
+        pTalla                 IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TALLA%TYPE,
+        pAsfixia               IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
+        pDescripcionAsfixia    IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
+        pAlojamientoConjunto   IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ALOJAMIENTO_CONJUNTO%TYPE,
+        pTiempoMadre           IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TIEMPO_MADRE%TYPE,
+        pHorasMadre            IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HORAS_MADRE%TYPE,
+        pHospitalizacion       IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HOSPITALIZACION%TYPE,
+        pUsuarioRegistro       IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.USUARIO_REGISTRO%TYPE,
+        pFechaRegistro         IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.FECHA_REGISTRO%TYPE,
+        pUsuarioModificacion   IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.USUARIO_MODIFICACION%TYPE,
+        pTipoOperacion         VARCHAR2,
+        pResultado             OUT VARCHAR2,
+        pMsgError              OUT VARCHAR2);
+END PKG_SNH_HISTORIA_CLINICA;
+/
