@@ -33,11 +33,9 @@ AS
         pExpedienteId       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.EXPEDIENTE_ID%TYPE,
         pUnidadSalud        IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.UNIDAD_SALUD_ID%TYPE,
         pPersonalSalud      IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.PERSONAL_SALUD_ID%TYPE,
-        pDivisionId         IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.DIVISIONP_ID%TYPE,
-		pFechaHistoria      IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_HISTORIA%TYPE,
+        pFechaHistoria      IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_HISTORIA%TYPE,
         pUsuarioRegistro    IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_REGISTRO%TYPE,
         pFechaRegistro      IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_REGISTRO%TYPE,
-        pRegistro           OUT VAR_REFCURSOR,
         pMsgError           OUT VARCHAR2,
         pResultado          OUT VARCHAR2)
     AS
@@ -52,8 +50,7 @@ AS
                                                 EXPEDIENTE_ID,
                                                 UNIDAD_SALUD_ID,
                                                 PERSONAL_SALUD_ID,
-                                                DIVISIONP_ID,
-												FECHA_HISTORIA,
+                                                FECHA_HISTORIA,
                                                 ESTADO_REGISTRO,
                                                 USUARIO_REGISTRO,
                                                 FECHA_REGISTRO
@@ -64,8 +61,7 @@ AS
                                                 pExpedienteId,
                                                 pUnidadSalud,
                                                 pPersonalSalud,
-                                                pDivisionId,
-												pFechaHistoria,
+                                              	NVL(pFechaHistoria,CURRENT_DATE),
                                                 pEstadoRegistro,
                                                 pUsuarioRegistro,
                                                 CURRENT_DATE
@@ -113,14 +109,12 @@ AS
         pExpedienteId        IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.EXPEDIENTE_ID%TYPE,
         pUnidadSalud         IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.UNIDAD_SALUD_ID%TYPE,
         pPersonalSalud       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.PERSONAL_SALUD_ID%TYPE,
-        pDivisionId          IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.DIVISIONP_ID%TYPE,
-		pFechaHistoria       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_HISTORIA%TYPE,
+        pFechaHistoria       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_HISTORIA%TYPE,
         pUsuarioRegistro     IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_REGISTRO%TYPE,
         pFechaRegistro       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_REGISTRO%TYPE,
         pUsuarioModificacion IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
         pFechaModificacion   IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_MODIFICACION%TYPE,
         pTipoOperacion       IN     VARCHAR2,
-        pRegistro            OUT VAR_REFCURSOR,
         pMsgError            OUT VARCHAR2,
         pResultado           OUT VARCHAR2)
     AS
@@ -138,12 +132,10 @@ AS
                     pTipoHistoria        => pTipoHistoria,
                     pExpedienteId        => pExpedienteId,
                     pUnidadSalud         => pUnidadSalud,
-                    pPersonalSalud       => pPersonalSalud,
-                    pDivisionId          => pDivisionId,
+                    pPersonalSalud       => pPersonalSalud,                  
 					pFechaHistoria       => pFechaHistoria,
                     pUsuarioRegistro     => pUsuarioRegistro,
-                    pFechaRegistro       => pFechaRegistro,
-                    pRegistro            => pRegistro,
+                    pFechaRegistro       => pFechaRegistro,                    
                     pMsgError            => pMsgError,
                     pResultado           => pResultado);
 
@@ -249,7 +241,7 @@ AS
         pInterconsultas      IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.INTERCONSULTAS%TYPE,
         pUsuarioModificacion IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
         pFechaModificacion   IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.FECHA_MODIFICACION%TYPE,
-        pRegistro            OUT    VAR_REFCURSOR,
+        --pRegistro            OUT    VAR_REFCURSOR,
         pResultado           OUT VARCHAR2,
         pMsgError            OUT VARCHAR2)
     AS
@@ -315,7 +307,7 @@ AS
         pUsuarioModificacion IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
         pFechaModificacion   IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.FECHA_MODIFICACION%TYPE,
         pTipoOperacion              VARCHAR2,
-        pRegistro            OUT VAR_REFCURSOR,
+        --pRegistro            OUT VAR_REFCURSOR,
         pResultado           OUT VARCHAR2,
         pMsgError            OUT VARCHAR2)
     AS
@@ -356,7 +348,7 @@ AS
                                     pInterconsultas      => pInterconsultas,
                                     pUsuarioModificacion => pUsuarioModificacion,
                                     pFechaModificacion   => pFechaModificacion,
-                                    pRegistro            => pRegistro,
+                                    --pRegistro            => pRegistro,
                                     pResultado           => pResultado,
                                     pMsgError            => pMsgError
                                     );
@@ -452,7 +444,7 @@ AS
                                         pEventualidades,
                                         pEstadoRegistro,
                                         pUsuarioRegistro,
-                                        pFechaRegistro);
+                                        CURRENT_DATE);
 
         pResultado   := 'ANTECEDENTES DEL PARTO  CREADO SATISFACTORIAMENTE';
     EXCEPTION
@@ -648,14 +640,14 @@ AS
     END SNH_CRUD_ANTECEDENTES_PARTO;
     /****************************************************************************************************************************************************************************/
     PROCEDURE SNH_C_MST_ANTE_POSTNATALES  (
-        pAntePostnatalesId     IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ANTE_POSTNATALES_ID%TYPE,
+       -- pAntePostnatalesId     IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ANTE_POSTNATALES_ID%TYPE,
         pHistoriaClinicaId     IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HISTORIA_CLINICA_ID%TYPE,
         pApgar1                IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.APGAR1%TYPE,
         pApgar5                IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.APGAR5%TYPE,
         pPeso                  IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.PESO%TYPE,
         pTalla                 IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TALLA%TYPE,
         pAsfixia               IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
-        pDescripcionAsfixia    IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
+        pDescripcionAsfixia    IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.DESCRIPCION_ASFIXIA%TYPE,
         pAlojamientoConjunto   IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ALOJAMIENTO_CONJUNTO%TYPE,
         pTiempoMadre           IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TIEMPO_MADRE%TYPE,
         pHorasMadre            IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HORAS_MADRE%TYPE,
@@ -721,7 +713,7 @@ AS
         pPeso                  IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.PESO%TYPE,
         pTalla                 IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TALLA%TYPE,
         pAsfixia               IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
-        pDescripcionAsfixia    IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
+        pDescripcionAsfixia    IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.DESCRIPCION_ASFIXIA%TYPE,
         pAlojamientoConjunto   IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ALOJAMIENTO_CONJUNTO%TYPE,
         pTiempoMadre           IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TIEMPO_MADRE%TYPE,
         pHorasMadre            IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HORAS_MADRE%TYPE,
@@ -799,7 +791,7 @@ AS
         pPeso                  IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.PESO%TYPE,
         pTalla                 IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TALLA%TYPE,
         pAsfixia               IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
-        pDescripcionAsfixia    IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ASFIXIA%TYPE,
+        pDescripcionAsfixia    IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.DESCRIPCION_ASFIXIA%TYPE,
         pAlojamientoConjunto   IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.ALOJAMIENTO_CONJUNTO%TYPE,
         pTiempoMadre           IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.TIEMPO_MADRE%TYPE,
         pHorasMadre            IN    HOSPITALARIO.SNH_MST_ANTE_POSTNATALES.HORAS_MADRE%TYPE,
@@ -824,7 +816,7 @@ AS
             WHEN pTipoOperacion = KINSERT
             THEN
                 SNH_C_MST_ANTE_POSTNATALES (
-                                    pAntePostnatalesId     => pAntePostnatalesId,
+                                    
                                     pHistoriaClinicaId     => pHistoriaClinicaId,
                                     pApgar1                => pApgar1,
                                     pApgar5                => pApgar5,
@@ -850,6 +842,7 @@ AS
                     ELSE
                         NULL;
                 END CASE;
+                
             WHEN pTipoOperacion = KUPDATE
             THEN
                 SNH_U_MST_ANTE_POSTNATALES  (
@@ -911,5 +904,741 @@ AS
         THEN
             pMsgError   := pMsgError || pResultado;
     END SNH_CRUD_ANTE_POSTNATALES;
+    
+    /****************************************************************************************************************************************************************************/
+    PROCEDURE SNH_C_MST_ALIMEN_PEDIATRICA (
+        pAlimentPediatricaId     IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.ALIMEN_PEDIATRICA_ID%TYPE,
+        pHistoriaId              IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.HISTORIA_CLINICA_ID%TYPE,
+        pLactanciaExclusiva      IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.LACTANCIA_EXCLUSIVA%TYPE,
+        pLactanciaMixta          IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.LACTANCIA_MIXTA%TYPE,
+        pDuracionMixta           IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.DURACION_LACT_MIXTA%TYPE,
+        pDuracionExclusiva       IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.DURACION_LACT_EXCLUSIVA%TYPE,
+        pAblactacion             IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.ABLACTACION%TYPE,
+        pUsuarioRegistro         IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.USUARIO_REGISTRO%TYPE,
+        pFechaRegistro           IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.FECHA_REGISTRO%TYPE,
+        pMsgError           OUT VARCHAR2,
+        pResultado          OUT VARCHAR2)
+    AS
+        vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_C_MST_ALIMEN_PEDIATRICA=>';
+        pEstadoRegistro NUMBER (10);
+    BEGIN
+        pEstadoRegistro   := FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+        INSERT INTO HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA (
+                                         HISTORIA_CLINICA_ID,
+                                         LACTANCIA_EXCLUSIVA,
+                                         LACTANCIA_MIXTA,
+                                         DURACION_LACT_MIXTA,
+                                         DURACION_LACT_EXCLUSIVA,
+                                         ABLACTACION,
+                                         ESTADO_REGISTRO,
+                                         USUARIO_REGISTRO,
+                                         FECHA_REGISTRO
+                                         )
+        VALUES                           (
+                                        pHistoriaId,
+                                        pLactanciaExclusiva,
+                                        pLactanciaMixta,
+                                        pDuracionMixta,
+                                        pDuracionExclusiva,
+                                        pAblactacion,
+                                        pEstadoRegistro,
+                                        pUsuarioRegistro,
+                                        CURRENT_DATE);
+
+        pResultado   := 'DATOS DE ALIMENTACION PEDIATRICA CREADOS  SATISFACTORIAMENTE';
+    EXCEPTION
+        WHEN OTHERS
+        THEN
+            pResultado   := 'ERROR INESPERADO';
+            pMsgError    := vFirma || pResultado || SQLERRM;
+    END SNH_C_MST_ALIMEN_PEDIATRICA;
+    /****************************************************************************************************************************************************************************/
+    PROCEDURE  SNH_U_MST_ALIMEN_PEDIATRICA  (
+        pAlimentPediatricaId     IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.ALIMEN_PEDIATRICA_ID%TYPE,
+        pHistoriaId              IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.HISTORIA_CLINICA_ID%TYPE,
+        pLactanciaExclusiva      IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.LACTANCIA_EXCLUSIVA%TYPE,
+        pLactanciaMixta          IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.LACTANCIA_MIXTA%TYPE,
+        pDuracionMixta           IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.DURACION_LACT_MIXTA%TYPE,
+        pDuracionExclusiva       IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.DURACION_LACT_EXCLUSIVA%TYPE,
+        pAblactacion             IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.ABLACTACION%TYPE,
+        pUsuarioModificacion     IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.USUARIO_MODIFICACION%TYPE,
+        pFechaModificacion       IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.FECHA_MODIFICACION%TYPE,
+        pMsgError           OUT VARCHAR2,
+        pResultado          OUT VARCHAR2)
+    AS
+        vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_U_MST_ALIMEN_PEDIATRICA=>';
+        pEstadoRegistro NUMBER (10);
+    BEGIN
+        pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+        UPDATE SNH_MST_ALIMEN_PEDIATRICA
+        SET 
+            HISTORIA_CLINICA_ID    = NVL (pHistoriaId, HISTORIA_CLINICA_ID),
+            LACTANCIA_EXCLUSIVA    = NVL (pLactanciaExclusiva,LACTANCIA_EXCLUSIVA ),
+            LACTANCIA_MIXTA        = NVL (pLactanciaMixta,LACTANCIA_MIXTA),
+            DURACION_LACT_MIXTA    = NVL (pDuracionMixta,DURACION_LACT_MIXTA),
+            DURACION_LACT_EXCLUSIVA= NVL (pDuracionExclusiva,DURACION_LACT_EXCLUSIVA),
+            ABLACTACION            = NVL (pAblactacion,ABLACTACION),
+            ESTADO_REGISTRO        = NVL (pEstadoRegistro, ESTADO_REGISTRO),  
+            USUARIO_MODIFICACION   = NVL (pUsuarioModificacion,USUARIO_MODIFICACION),
+            FECHA_MODIFICACION     = CURRENT_DATE     
+        WHERE ALIMEN_PEDIATRICA_ID = pAlimentPediatricaId;
+
+        pResultado   :='DATOS DE ALIMENTACION PEDIATRICA   ACTUALIZADOS  SATISFACTORIAMENTE';
+    EXCEPTION
+        WHEN OTHERS
+        THEN
+            pResultado   := 'ERROR INESPERADO';
+            pMsgError    := vFirma || pResultado || SQLERRM;
+    END SNH_U_MST_ALIMEN_PEDIATRICA;
+    
+    /****************************************************************************************************************************************************************************/
+    PROCEDURE SNH_D_MST_ALIMEN_PEDIATRICA (
+        pAlimentPediatricaId     IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.ALIMEN_PEDIATRICA_ID%TYPE,
+        pUsuarioModificacion     IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.USUARIO_MODIFICACION%TYPE,
+        pFechaModificacion       IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.FECHA_MODIFICACION%TYPE,
+        pMsgError           OUT VARCHAR2,
+        pResultado          OUT VARCHAR2)
+        
+    AS
+        vFirma         VARCHAR2 (200) := 'PKG_SNH_HISTORIA_CLINICA.SNH_D_MST_ALIMEN_PEDIATRICA=>';
+        pEstadoRegistro NUMBER (10);
+    BEGIN
+        pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_PAS);
+
+        UPDATE  SNH_MST_ALIMEN_PEDIATRICA
+        SET 
+            ESTADO_REGISTRO         = NVL (pEstadoRegistro, ESTADO_REGISTRO),
+            USUARIO_MODIFICACION    = NVL (pUsuarioModificacion,USUARIO_MODIFICACION),
+            FECHA_MODIFICACION      = CURRENT_DATE
+        WHERE  ALIMEN_PEDIATRICA_ID = pAlimentPediatricaId;
+
+        pResultado   :='DATOS DE ALIMENTACION PEDIATRICA ELIMINADOS  SATISFACTORIAMENTE';
+    EXCEPTION
+        WHEN OTHERS
+        THEN
+            pResultado   := 'ERROR INESPERADO';
+            pMsgError    := vFirma || pResultado || SQLERRM;
+    END SNH_D_MST_ALIMEN_PEDIATRICA;
+    
+     PROCEDURE SNH_CRUD_ALIMEN_PEDIATRICA (
+        pAlimentPediatricaId     IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.ALIMEN_PEDIATRICA_ID%TYPE,
+        pHistoriaId              IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.HISTORIA_CLINICA_ID%TYPE,
+        pLactanciaExclusiva      IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.LACTANCIA_EXCLUSIVA%TYPE,
+        pLactanciaMixta          IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.LACTANCIA_MIXTA%TYPE,
+        pDuracionMixta           IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.DURACION_LACT_MIXTA%TYPE,
+        pDuracionExclusiva       IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.DURACION_LACT_EXCLUSIVA%TYPE,
+        pAblactacion             IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.ABLACTACION%TYPE,
+        pUsuarioRegistro         IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.USUARIO_REGISTRO%TYPE,
+        pFechaRegistro           IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.FECHA_REGISTRO%TYPE,
+        pUsuarioModificacion     IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.USUARIO_MODIFICACION%TYPE,
+        pFechaModificacion       IN    HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA.FECHA_MODIFICACION%TYPE,
+        pMsgError           OUT VARCHAR2,
+        pResultado          OUT VARCHAR2,
+        pTipoOperacion         VARCHAR2
+                 
+        )
+    AS
+        vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_CRUD_ALIMEN_PEDIATRICA=>';
+    --  pEstadoRegistro NUMBER(10);
+    BEGIN
+        CASE
+            WHEN pTipoOperacion IS NULL
+            THEN
+                pResultado   := 'No se ha indicado el tipo de operacion';
+                RAISE eParametroNull;
+            WHEN pTipoOperacion = KINSERT
+            THEN
+                SNH_C_MST_ALIMEN_PEDIATRICA (
+                                    pAlimentPediatricaId     =>    pAlimentPediatricaId,
+                                    pHistoriaId              =>    pHistoriaId,
+                                    pLactanciaExclusiva      =>    pLactanciaExclusiva,
+                                    pLactanciaMixta          =>    pLactanciaMixta,
+                                    pDuracionMixta           =>    pDuracionMixta,
+                                    pDuracionExclusiva       =>    pDuracionExclusiva,
+                                    pAblactacion             =>    pAblactacion,
+                                    pUsuarioRegistro         =>    pUsuarioRegistro,
+                                    pFechaRegistro           =>    pFechaRegistro,
+                                    pMsgError                =>    pMsgError,
+                                    pResultado               =>    pResultado                                    
+                                    );
+
+                CASE
+                    WHEN pMsgError IS NOT NULL
+                    THEN
+                        RAISE eSalidaConError;
+                    ELSE
+                        NULL;
+                END CASE;
+                
+            WHEN pTipoOperacion = KUPDATE
+            THEN
+                SNH_U_MST_ALIMEN_PEDIATRICA  (
+                                    pAlimentPediatricaId     =>   pAlimentPediatricaId,   
+                                    pHistoriaId              =>   pHistoriaId,
+                                    pLactanciaExclusiva      =>   pLactanciaExclusiva,
+                                    pLactanciaMixta          =>   pLactanciaMixta,
+                                    pDuracionMixta           =>   pDuracionMixta,
+                                    pDuracionExclusiva       =>   pDuracionExclusiva,
+                                    pAblactacion             =>   pAblactacion,
+                                    pUsuarioModificacion     =>   pUsuarioModificacion,
+                                    pFechaModificacion       =>   pFechaModificacion,
+                                    pMsgError                =>   pMsgError,
+                                    pResultado               =>   pResultado
+                                                                                               
+                                    );
+
+                CASE
+                    WHEN pMsgError IS NOT NULL
+                    THEN
+                        RAISE eSalidaConError;
+                    ELSE
+                        NULL;
+                END CASE;
+            WHEN pTipoOperacion = KDELETE
+            THEN
+                SNH_D_MST_ALIMEN_PEDIATRICA (
+                                    pAlimentPediatricaId     =>   pAlimentPediatricaId,
+                                    pUsuarioModificacion     =>   pUsuarioModificacion,
+                                    pFechaModificacion       =>   pFechaModificacion,
+                                    pMsgError                =>   pMsgError,
+                                    pResultado               =>   pResultado                                                                     
+                                    );
+
+                CASE
+                    WHEN pMsgError IS NOT NULL
+                    THEN
+                        RAISE eSalidaConError;
+                    ELSE
+                        NULL;
+                END CASE;
+            ELSE
+                --pResultado := 'EL PARÁMETRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
+                pResultado   := 'EL TIPO DE OPERACIÓN  ES INVALIDO';
+                RAISE eParametrosInvalidos;
+        END CASE;
+    EXCEPTION
+        WHEN eParametroNull
+        THEN
+            pMsgError   := pMsgError || pResultado;
+        WHEN eSalidaConError
+        THEN
+            --pMsgError:= pMsgError||
+            pResultado   := 'ERROR';
+        WHEN eParametrosInvalidos
+        THEN
+            pMsgError   := pMsgError || pResultado;
+    END SNH_CRUD_ALIMEN_PEDIATRICA;
+    
+    
+    
+    /****************************************************************************************************************************************************************************/
+    PROCEDURE SNH_C_MST_ANTE_PSICOMOTOR(
+        pHistoriaId           IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.HISTORIA_CLINICA_ID%TYPE,
+        pTipoDesarrollo       IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.TIPO_DESARROLLO%TYPE,
+        pConfirmaDesarrollo   IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.CONFIRMA_DESARROLLO%TYPE,
+        pEdad                 IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.EDAD%TYPE,
+        pUsuarioRegistro      IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.USUARIO_REGISTRO%TYPE,    
+        pMsgError             OUT VARCHAR2,
+        pResultado            OUT VARCHAR2)
+    AS
+        vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_C_MST_ANTE_PSICOMOTOR=>';
+        pEstadoRegistro NUMBER (10);
+    BEGIN
+        pEstadoRegistro   := FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+        INSERT INTO HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR (
+                                         HISTORIA_CLINICA_ID, 
+                                         TIPO_DESARROLLO, 
+                                         CONFIRMA_DESARROLLO, 
+                                         EDAD, 
+                                         ESTADO_REGISTRO, 
+                                         USUARIO_REGISTRO, 
+                                         FECHA_REGISTRO
+                                         )
+        VALUES                           (
+                                        pHistoriaId,
+                                        pTipoDesarrollo,
+                                        pConfirmaDesarrollo,
+                                        pEdad,
+                                        pEstadoRegistro,
+                                        pUsuarioRegistro,
+                                        CURRENT_DATE);
+
+        pResultado   := 'DATOS DE ANTECEDENTES PSICOMOTOR CREADOS  SATISFACTORIAMENTE';
+    EXCEPTION
+        WHEN OTHERS
+        THEN
+            pResultado   := 'ERROR INESPERADO';
+            pMsgError    := vFirma || pResultado || SQLERRM;
+    END SNH_C_MST_ANTE_PSICOMOTOR;
+    
+    /****************************************************************************************************************************************************************************/
+    PROCEDURE  SNH_U_MST_ANTE_PSICOMOTOR  (
+        pAntePsicomotorId     IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.ANTE_PSICOMOTOR_ID%TYPE,
+        pHistoriaId           IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.HISTORIA_CLINICA_ID%TYPE,
+        pTipoDesarrollo       IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.TIPO_DESARROLLO%TYPE,
+        pConfirmaDesarrollo   IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.CONFIRMA_DESARROLLO%TYPE,
+        pEdad                 IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.EDAD%TYPE,
+        pUsuarioModificacion  IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.USUARIO_MODIFICACION%TYPE,    
+        pMsgError             OUT VARCHAR2,
+        pResultado            OUT VARCHAR2)
+    AS
+        vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_U_MST_ANTE_PSICOMOTOR=>';
+        pEstadoRegistro NUMBER (10);
+    BEGIN
+        pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+        UPDATE SNH_MST_ANTE_PSICOMOTOR
+        SET 
+            HISTORIA_CLINICA_ID    = NVL (pHistoriaId, HISTORIA_CLINICA_ID),
+            TIPO_DESARROLLO        = NVL (pTipoDesarrollo, TIPO_DESARROLLO), 
+            CONFIRMA_DESARROLLO    = NVL (pConfirmaDesarrollo, CONFIRMA_DESARROLLO), 
+            EDAD                   = NVL (pEdad,EDAD),
+            ESTADO_REGISTRO        = NVL (pEstadoRegistro, ESTADO_REGISTRO),  
+            USUARIO_MODIFICACION   = NVL (pUsuarioModificacion,USUARIO_MODIFICACION),
+            FECHA_MODIFICACION     = CURRENT_DATE     
+        WHERE ANTE_PSICOMOTOR_ID   = pAntePsicomotorId;
+
+        pResultado   :='DATOS DE ANTECEDENTES PSICOMOTOR   ACTUALIZADOS  SATISFACTORIAMENTE';
+    EXCEPTION
+        WHEN OTHERS
+        THEN
+            pResultado   := 'ERROR INESPERADO';
+            pMsgError    := vFirma || pResultado || SQLERRM;
+    END SNH_U_MST_ANTE_PSICOMOTOR;
+    /****************************************************************************************************************************************************************************/
+    PROCEDURE SNH_D_MST_ANTE_PSICOMOTOR (
+        pAntePsicomotorId     IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.ANTE_PSICOMOTOR_ID%TYPE,
+        pUsuarioModificacion  IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.USUARIO_MODIFICACION%TYPE,    
+        pMsgError             OUT VARCHAR2,
+        pResultado            OUT VARCHAR2)
+        
+    AS
+        vFirma         VARCHAR2 (200) := 'PKG_SNH_HISTORIA_CLINICA.SNH_D_MST_ANTE_PSICOMOTOR=>';
+        pEstadoRegistro NUMBER (10);
+    BEGIN
+        pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_PAS);
+
+        UPDATE  SNH_MST_ANTE_PSICOMOTOR
+        SET 
+            ESTADO_REGISTRO         = NVL (pEstadoRegistro, ESTADO_REGISTRO),
+            USUARIO_MODIFICACION    = NVL (pUsuarioModificacion,USUARIO_MODIFICACION),
+            FECHA_MODIFICACION      = CURRENT_DATE
+        WHERE  ANTE_PSICOMOTOR_ID   = pAntePsicomotorId;
+
+        pResultado   :='DATOS DE ANTECEDENTES PSICOMOTOR ELIMINADOS  SATISFACTORIAMENTE';
+    EXCEPTION
+        WHEN OTHERS
+        THEN
+            pResultado   := 'ERROR INESPERADO';
+            pMsgError    := vFirma || pResultado || SQLERRM;
+    END SNH_D_MST_ANTE_PSICOMOTOR ;
+      /****************************************************************************************************************************************************************************/
+    PROCEDURE SNH_CRUD_ANTE_PSICOMOTOR (
+        pAntePsicomotorId     IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.ANTE_PSICOMOTOR_ID%TYPE,
+        pHistoriaId           IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.HISTORIA_CLINICA_ID%TYPE,
+        pTipoDesarrollo       IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.TIPO_DESARROLLO%TYPE,
+        pConfirmaDesarrollo   IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.CONFIRMA_DESARROLLO%TYPE,
+        pEdad                 IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.EDAD%TYPE,
+        pUsuarioRegistro      IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.USUARIO_REGISTRO%TYPE,  
+        pUsuarioModificacion  IN    HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR.USUARIO_MODIFICACION%TYPE,    
+        pMsgError             OUT VARCHAR2,
+        pResultado            OUT VARCHAR2,
+        pTipoOperacion         VARCHAR2
+                 
+        )
+    AS
+        vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_CRUD_ANTE_PSICOMOTOR=>';
+    --  pEstadoRegistro NUMBER(10);
+    BEGIN
+        CASE
+            WHEN pTipoOperacion IS NULL
+            THEN
+                pResultado   := 'No se ha indicado el tipo de operacion';
+                RAISE eParametroNull;
+            WHEN pTipoOperacion = KINSERT
+            THEN
+            
+                SNH_C_MST_ANTE_PSICOMOTOR( 
+                                    pHistoriaId           =>    pHistoriaId,
+                                    pTipoDesarrollo       =>    pTipoDesarrollo,
+                                    pConfirmaDesarrollo   =>    pConfirmaDesarrollo,
+                                    pEdad                 =>    pEdad,
+                                    pUsuarioRegistro      =>    pUsuarioRegistro,
+                                    pMsgError             =>    pMsgError,
+                                    pResultado            =>    pResultado);
+
+                CASE
+                    WHEN pMsgError IS NOT NULL
+                    THEN
+                        RAISE eSalidaConError;
+                    ELSE
+                        NULL;
+                END CASE;
+                
+            WHEN pTipoOperacion = KUPDATE
+            THEN
+            
+            
+                SNH_U_MST_ANTE_PSICOMOTOR  (
+                                    pAntePsicomotorId     =>    pAntePsicomotorId,
+                                    pHistoriaId           =>    pHistoriaId,
+                                    pTipoDesarrollo       =>    pTipoDesarrollo,
+                                    pConfirmaDesarrollo   =>    pConfirmaDesarrollo,
+                                    pEdad                 =>    pEdad,
+                                    pUsuarioModificacion  =>    pUsuarioModificacion,   
+                                    pMsgError             =>    pMsgError,
+                                    pResultado            =>    pResultado
+                                    );
+                
+
+                CASE
+                    WHEN pMsgError IS NOT NULL
+                    THEN
+                        RAISE eSalidaConError;
+                    ELSE
+                        NULL;
+                END CASE;
+            WHEN pTipoOperacion = KDELETE
+            THEN
+                SNH_D_MST_ANTE_PSICOMOTOR (
+                                    pAntePsicomotorId     =>    pAntePsicomotorId,
+                                    pUsuarioModificacion  =>    pUsuarioModificacion,  
+                                    pMsgError             =>    pMsgError,
+                                    pResultado            =>    pResultado
+                                    );
+                
+
+                CASE
+                    WHEN pMsgError IS NOT NULL
+                    THEN
+                        RAISE eSalidaConError;
+                    ELSE
+                        NULL;
+                END CASE;
+            ELSE
+                --pResultado := 'EL PARÁMETRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
+                pResultado   := 'EL TIPO DE OPERACIÓN  ES INVALIDO';
+                RAISE eParametrosInvalidos;
+        END CASE;
+    EXCEPTION
+        WHEN eParametroNull
+        THEN
+            pMsgError   := pMsgError || pResultado;
+        WHEN eSalidaConError
+        THEN
+            --pMsgError:= pMsgError||
+            pResultado   := 'ERROR';
+        WHEN eParametrosInvalidos
+        THEN
+            pMsgError   := pMsgError || pResultado;
+    END SNH_CRUD_ANTE_PSICOMOTOR;
+    
+    PROCEDURE SNH_C_ANTE_SOCIOECONOMICO (
+        pHistoriaId              IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.HISTORIA_CLINICA_ID%TYPE,
+        pCasa                    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.CASA%TYPE,
+        pParedes                 IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.PAREDES%TYPE,
+        pPiso                    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.PISO%TYPE,
+        pTecho                   IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.TECHO%TYPE,
+        pServiciosHigienicos     IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.SERVICIOS_HIGIENICOS%TYPE,
+        pHabitaciones            IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.HABITACIONES%TYPE,
+        pAgua                    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.AGUA%TYPE,
+        pLugarAgua               IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.LUGAR_AGUA%TYPE,
+        pLuz                     IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.LUZ%TYPE,
+        pLugarExcretas           IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.LUGAR_EXCRETAS%TYPE,
+        pNumeroPersonas          IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.NUMERO_PERSONAS%TYPE,
+        pAnimales                IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.ANIMALES%TYPE,
+        pTelefono                IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.TELEFONO%TYPE,
+        pObservaciones           IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.OBSERVACIONES%TYPE,
+        pOtros                   IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.OTROS%TYPE,
+        pHacimiento              IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.HACIMIENTO%TYPE,
+        pUsuarioRegistro         IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.USUARIO_REGISTRO%TYPE,
+        pMsgError           OUT VARCHAR2,
+        pResultado          OUT VARCHAR2)
+    AS
+        vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_C_ANTE_SOCIOECONOMICO=>';
+        pEstadoRegistro NUMBER (10);
+    BEGIN
+        pEstadoRegistro   := FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+        INSERT INTO HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO (
+                                         HISTORIA_CLINICA_ID, 
+                                         CASA, 
+                                         PAREDES, 
+                                         PISO, 
+                                         TECHO, 
+                                         SERVICIOS_HIGIENICOS, 
+                                         HABITACIONES, 
+                                         AGUA, 
+                                         LUGAR_AGUA, 
+                                         LUZ, 
+                                         LUGAR_EXCRETAS, 
+                                         NUMERO_PERSONAS, 
+                                         ANIMALES, 
+                                         TELEFONO, 
+                                         OBSERVACIONES, 
+                                         OTROS, 
+                                         HACIMIENTO, 
+                                         ESTADO_REGISTRO, 
+                                         USUARIO_REGISTRO, 
+                                         FECHA_REGISTRO
+                                         )
+        VALUES                           (
+                                        pHistoriaId,
+                                        pCasa,
+                                        pParedes,
+                                        pPiso,
+                                        pTecho,
+                                        pServiciosHigienicos,
+                                        pHabitaciones,
+                                        pAgua,
+                                        pLugarAgua,
+                                        pLuz,
+                                        pLugarExcretas,
+                                        pNumeroPersonas,
+                                        pAnimales,
+                                        pTelefono,
+                                        pObservaciones,
+                                        pOtros,
+                                        pHacimiento,
+                                        pEstadoRegistro,
+                                        pUsuarioRegistro,
+                                        CURRENT_DATE);
+
+        pResultado   := 'DATOS DE ANTECEDENTES SOCIOECONOMICOS CREADOS  SATISFACTORIAMENTE';
+    EXCEPTION
+        WHEN OTHERS
+        THEN
+            pResultado   := 'ERROR INESPERADO';
+            pMsgError    := vFirma || pResultado || SQLERRM;
+    END SNH_C_ANTE_SOCIOECONOMICO;
+    /****************************************************************************************************************************************************************************/
+    PROCEDURE  SNH_U_ANTE_SOCIOECONOMICO  (
+        pAnteSocioeconomicoId    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.ANTE_SOCIOECONOMICO_ID%TYPE,
+        pHistoriaId              IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.HISTORIA_CLINICA_ID%TYPE,
+        pCasa                    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.CASA%TYPE,
+        pParedes                 IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.PAREDES%TYPE,
+        pPiso                    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.PISO%TYPE,
+        pTecho                   IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.TECHO%TYPE,
+        pServiciosHigienicos     IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.SERVICIOS_HIGIENICOS%TYPE,
+        pHabitaciones            IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.HABITACIONES%TYPE,
+        pAgua                    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.AGUA%TYPE,
+        pLugarAgua               IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.LUGAR_AGUA%TYPE,
+        pLuz                     IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.LUZ%TYPE,
+        pLugarExcretas           IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.LUGAR_EXCRETAS%TYPE,
+        pNumeroPersonas          IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.NUMERO_PERSONAS%TYPE,
+        pAnimales                IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.ANIMALES%TYPE,
+        pTelefono                IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.TELEFONO%TYPE,
+        pObservaciones           IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.OBSERVACIONES%TYPE,
+        pOtros                   IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.OTROS%TYPE,
+        pHacimiento              IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.HACIMIENTO%TYPE,
+        pUsuarioModificacion     IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.USUARIO_MODIFICACION%TYPE,
+        pMsgError           OUT VARCHAR2,
+        pResultado          OUT VARCHAR2)
+    AS
+        vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_U_ANTE_SOCIOECONOMICO=>';
+        pEstadoRegistro NUMBER (10);
+    BEGIN
+        pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+        UPDATE SNH_MST_ANTE_SOCIOECONOMICO
+        SET 
+            HISTORIA_CLINICA_ID     = NVL    (pHistoriaId,HISTORIA_CLINICA_ID),
+            CASA                    = NVL    (pCasa, CASA),                       
+            PAREDES                 = NVL    (pParedes,PAREDES), 
+            PISO                    = NVL    (pPiso,PISO), 
+            TECHO                   = NVL    (pTecho,TECHO), 
+            SERVICIOS_HIGIENICOS    = NVL    (pServiciosHigienicos, SERVICIOS_HIGIENICOS), 
+            HABITACIONES            = NVL    (pHabitaciones,HABITACIONES), 
+            AGUA                    = NVL    (pAgua,AGUA), 
+            LUGAR_AGUA              = NVL    (pLugarAgua,LUGAR_AGUA), 
+            LUZ                     = NVL    (pLuz,LUZ), 
+            LUGAR_EXCRETAS          = NVL    (pLugarExcretas,LUGAR_EXCRETAS ), 
+            NUMERO_PERSONAS         = NVL    (pNumeroPersonas, NUMERO_PERSONAS), 
+            ANIMALES                = NVL    (pAnimales,ANIMALES ), 
+            TELEFONO                = NVL    (pTelefono,TELEFONO), 
+            OBSERVACIONES           = NVL    (pObservaciones, OBSERVACIONES), 
+            OTROS                   = NVL    (pOtros,OTROS ), 
+            ESTADO_REGISTRO         = NVL    (pEstadoRegistro, ESTADO_REGISTRO),          
+            USUARIO_MODIFICACION    = NVL    (pUsuarioModificacion, USUARIO_MODIFICACION), 
+            FECHA_MODIFICACION      = CURRENT_DATE
+        WHERE ANTE_SOCIOECONOMICO_ID = pAnteSocioeconomicoId;
+
+        pResultado   :='DATOS DE ANTECEDENTES SOCIO ECONOMICOS ACTUALIZADOS  SATISFACTORIAMENTE';
+    EXCEPTION
+        WHEN OTHERS
+        THEN
+            pResultado   := 'ERROR INESPERADO';
+            pMsgError    := vFirma || pResultado || SQLERRM;
+    END SNH_U_ANTE_SOCIOECONOMICO;
+    
+    /****************************************************************************************************************************************************************************/
+    PROCEDURE SNH_D_ANTE_SOCIOECONOMICO (
+        pAnteSocioeconomicoId    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.ANTE_SOCIOECONOMICO_ID%TYPE,
+        pUsuarioModificacion     IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.USUARIO_MODIFICACION%TYPE,
+        pMsgError           OUT VARCHAR2,
+        pResultado          OUT VARCHAR2)
+        
+    AS
+        vFirma         VARCHAR2 (200) := 'PKG_SNH_HISTORIA_CLINICA.SNH_D_ANTE_SOCIOECONOMICO=>';
+        pEstadoRegistro NUMBER (10);
+    BEGIN
+        pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_PAS);
+
+        UPDATE  SNH_MST_ANTE_SOCIOECONOMICO
+        SET 
+            ESTADO_REGISTRO          = NVL (pEstadoRegistro, ESTADO_REGISTRO),
+            USUARIO_MODIFICACION     = NVL (pUsuarioModificacion,USUARIO_MODIFICACION),
+            FECHA_MODIFICACION       = CURRENT_DATE
+        WHERE ANTE_SOCIOECONOMICO_ID = pAnteSocioeconomicoId;
+
+        pResultado   :='DATOS DE ANTECEDENTES SOCIOECONOMICOS ELIMINADOS  SATISFACTORIAMENTE';
+    EXCEPTION
+        WHEN OTHERS
+        THEN
+            pResultado   := 'ERROR INESPERADO';
+            pMsgError    := vFirma || pResultado || SQLERRM;
+    END SNH_D_ANTE_SOCIOECONOMICO;
+    
+      /****************************************************************************************************************************************************************************/
+    
+     PROCEDURE SNH_CRUD_ANTE_SOCIOECONOMICO(
+        pAnteSocioeconomicoId    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.ANTE_SOCIOECONOMICO_ID%TYPE,
+        pHistoriaId              IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.HISTORIA_CLINICA_ID%TYPE,
+        pCasa                    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.CASA%TYPE,
+        pParedes                 IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.PAREDES%TYPE,
+        pPiso                    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.PISO%TYPE,
+        pTecho                   IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.TECHO%TYPE,
+        pServiciosHigienicos     IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.SERVICIOS_HIGIENICOS%TYPE,
+        pHabitaciones            IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.HABITACIONES%TYPE,
+        pAgua                    IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.AGUA%TYPE,
+        pLugarAgua               IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.LUGAR_AGUA%TYPE,
+        pLuz                     IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.LUZ%TYPE,
+        pLugarExcretas           IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.LUGAR_EXCRETAS%TYPE,
+        pNumeroPersonas          IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.NUMERO_PERSONAS%TYPE,
+        pAnimales                IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.ANIMALES%TYPE,
+        pTelefono                IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.TELEFONO%TYPE,
+        pObservaciones           IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.OBSERVACIONES%TYPE,
+        pOtros                   IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.OTROS%TYPE,
+        pHacimiento              IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.HACIMIENTO%TYPE,
+        pUsuarioModificacion     IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.USUARIO_MODIFICACION%TYPE,
+        pUsuarioRegistro         IN    HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO.USUARIO_REGISTRO%TYPE,
+        pMsgError                OUT VARCHAR2,
+        pResultado               OUT VARCHAR2,
+        pTipoOperacion               VARCHAR2)
+                 
+    AS
+        vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_CRUD_ANTE_SOCIOECONOMICO=>';
+    --  pEstadoRegistro NUMBER(10);
+    BEGIN
+        CASE
+            WHEN pTipoOperacion IS NULL
+            THEN
+                pResultado   := 'No se ha indicado el tipo de operacion';
+                RAISE eParametroNull;
+            WHEN pTipoOperacion = KINSERT
+            THEN
+                SNH_C_ANTE_SOCIOECONOMICO (
+                                    pHistoriaId              =>     pHistoriaId,
+                                    pCasa                    =>     pCasa,
+                                    pParedes                 =>     pParedes,
+                                    pPiso                    =>     pPiso,
+                                    pTecho                   =>     pTecho,
+                                    pServiciosHigienicos     =>     pServiciosHigienicos,
+                                    pHabitaciones            =>     pHabitaciones,
+                                    pAgua                    =>     pAgua,
+                                    pLugarAgua               =>     pLugarAgua,
+                                    pLuz                     =>     pLuz,
+                                    pLugarExcretas           =>     pLugarExcretas,
+                                    pNumeroPersonas          =>     pNumeroPersonas,
+                                    pAnimales                =>     pAnimales,
+                                    pTelefono                =>     pTelefono,
+                                    pObservaciones           =>     pObservaciones,
+                                    pOtros                   =>     pOtros,
+                                    pHacimiento              =>     pHacimiento,
+                                    pUsuarioRegistro         =>     pUsuarioRegistro,
+                                    pMsgError                =>     pMsgError,
+                                    pResultado               =>     pResultado
+                                    );
+
+                CASE
+                    WHEN pMsgError IS NOT NULL
+                    THEN
+                        RAISE eSalidaConError;
+                    ELSE
+                        NULL;
+                END CASE;
+                
+            WHEN pTipoOperacion = KUPDATE
+            THEN
+                SNH_U_ANTE_SOCIOECONOMICO  (
+                                    pAnteSocioeconomicoId    =>     pAnteSocioeconomicoId,
+                                    pHistoriaId              =>     pHistoriaId,
+                                    pCasa                    =>     pCasa,
+                                    pParedes                 =>     pParedes,
+                                    pPiso                    =>     pPiso,
+                                    pTecho                   =>     pTecho,
+                                    pServiciosHigienicos     =>     pServiciosHigienicos,
+                                    pHabitaciones            =>     pHabitaciones,
+                                    pAgua                    =>     pAgua,
+                                    pLugarAgua               =>     pLugarAgua,
+                                    pLuz                     =>     pLuz,
+                                    pLugarExcretas           =>     pLugarExcretas,
+                                    pNumeroPersonas          =>     pNumeroPersonas,
+                                    pAnimales                =>     pAnimales,
+                                    pTelefono                =>     pTelefono,
+                                    pObservaciones           =>     pObservaciones,
+                                    pOtros                   =>     pOtros,
+                                    pHacimiento              =>     pHacimiento,
+                                    pUsuarioModificacion     =>     pUsuarioModificacion,
+                                    pMsgError                =>     pMsgError,
+                                    pResultado               =>     pResultado
+                                                                                                              
+                                    );
+
+                CASE
+                    WHEN pMsgError IS NOT NULL
+                    THEN
+                        RAISE eSalidaConError;
+                    ELSE
+                        NULL;
+                END CASE;
+            WHEN pTipoOperacion = KDELETE
+            THEN
+            
+                SNH_D_ANTE_SOCIOECONOMICO (
+                                    pAnteSocioeconomicoId    =>     pAnteSocioeconomicoId,
+                                    pUsuarioModificacion     =>     pUsuarioModificacion,
+                                    pMsgError                =>     pMsgError,
+                                    pResultado               =>     pResultado                                                              
+                                    );
+
+                CASE
+                    WHEN pMsgError IS NOT NULL
+                    THEN
+                        RAISE eSalidaConError;
+                    ELSE
+                        NULL;
+                END CASE;
+            ELSE
+                --pResultado := 'EL PARÁMETRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
+                pResultado   := 'EL TIPO DE OPERACIÓN  ES INVALIDO';
+                RAISE eParametrosInvalidos;
+        END CASE;
+    EXCEPTION
+        WHEN eParametroNull
+        THEN
+            pMsgError   := pMsgError || pResultado;
+        WHEN eSalidaConError
+        THEN
+            --pMsgError:= pMsgError||
+            pResultado   := 'ERROR';
+        WHEN eParametrosInvalidos
+        THEN
+            pMsgError   := pMsgError || pResultado;
+    END SNH_CRUD_ANTE_SOCIOECONOMICO;
+    
 END PKG_SNH_HISTORIA_CLINICA;
 /
