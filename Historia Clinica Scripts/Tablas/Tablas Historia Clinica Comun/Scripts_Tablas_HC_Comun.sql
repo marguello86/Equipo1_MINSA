@@ -1,7 +1,7 @@
 -- Table HOSPITALARIO.SNH_MST_ANTE_ENFERMEDADES
 
-CREATE TABLE "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES"(
-  "ANTE_ENFERMEDADES_ID" Number(10,0) NOT NULL,
+CREATE TABLE "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS"(
+  "ANTE_PATOLOGICOS_ID" Number(10,0) NOT NULL,
   "HISTORIA_CLINICA_ID" Number(10,0) NOT NULL,
   "TIPO_ANTECEDENTE" Number(10,0) NOT NULL,
   "VALOR_ANTECEDENTE" Varchar2(1000 ) NOT NULL,
@@ -15,30 +15,30 @@ CREATE TABLE "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES"(
 
 -- Add keys for table HOSPITALARIO.SNH_MST_ANTE_ENFERMEDADES
 
-ALTER TABLE "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES" ADD CONSTRAINT "PK_SNH_MST_ANTE_ENFERMEDADES" PRIMARY KEY ("ANTE_ENFERMEDADES_ID")
+ALTER TABLE "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS" ADD CONSTRAINT "PK_SNH_MST_ANTE_PATOLOGICOS" PRIMARY KEY ("ANTE_PATOLOGICOS_ID")
 ;
 
 -- Table and Columns comments section
 
-COMMENT ON TABLE "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES" IS 'Esta Tabla almacena los antecedentes personales patológicos los cuales corresponden a las enfermedades padecidas por el paciente ademas de las cirugías u hospitalizaciones que ha tenido. Aplica para la historia clínica pediatrica, adolescente, y de adulto. En la historia clínica la seccion corresponde a los antecedentes personales'
+COMMENT ON TABLE "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS" IS 'Esta Tabla almacena los antecedentes personales patológicos los cuales corresponden a las enfermedades padecidas por el paciente ademas de las cirugías u hospitalizaciones que ha tenido. Aplica para la historia clínica pediatrica, adolescente, y de adulto. En la historia clínica la seccion corresponde a los antecedentes personales'
 ;
-COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES"."ANTE_ENFERMEDADES_ID" IS 'Llave Principal'
+COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS"."ANTE_PATOLOGICOS_ID" IS 'Llave Principal'
 ;
-COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES"."HISTORIA_CLINICA_ID" IS 'Llave Foránea de la tabla de SNH_MST_HISTORIA_CLINICA'
+COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS"."HISTORIA_CLINICA_ID" IS 'Llave Foránea de la tabla de SNH_MST_HISTORIA_CLINICA'
 ;
-COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES"."TIPO_ANTECEDENTE" IS 'Catalogo predefinido del tipo de antecedente personal patológico: Enfermedades infectocontagiosas, Enfermedades cronicas, cirugias u hospitalizaciones'
+COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS"."TIPO_ANTECEDENTE" IS 'Catalogo predefinido del tipo de antecedente personal patológico: Enfermedades infectocontagiosas, Enfermedades cronicas, cirugias u hospitalizaciones'
 ;
-COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES"."VALOR_ANTECEDENTE" IS 'Descripción del tipo de Enfermedad. '
+COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS"."VALOR_ANTECEDENTE" IS 'Descripción del tipo de Enfermedad. '
 ;
-COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES"."ESTADO_REGISTRO" IS 'Catalogo Predefinido del estado de los datos de los antecedentes de enfermedades'
+COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS"."ESTADO_REGISTRO" IS 'Catalogo Predefinido del estado de los datos de los antecedentes de enfermedades'
 ;
-COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES"."USUARIO_REGISTRO" IS 'Usuario que agregó los antecedentes de Enfermedades'
+COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS"."USUARIO_REGISTRO" IS 'Usuario que agregó los antecedentes de Enfermedades'
 ;
-COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES"."FECHA_REGISTRO" IS 'Fecha en la que se agregó los antecedentes de Enfermedades'
+COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS"."FECHA_REGISTRO" IS 'Fecha en la que se agregó los antecedentes de Enfermedades'
 ;
-COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES"."USUARIO_MODIFICACION" IS 'Último usuario que modificó los antecedentes de Enfermedades'
+COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS"."USUARIO_MODIFICACION" IS 'Último usuario que modificó los antecedentes de Enfermedades'
 ;
-COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_ENFERMEDADES"."FECHA_MODIFICACION" IS 'Última Fecha en la que se modificaron los antecedentes de enfermedades'
+COMMENT ON COLUMN "HOSPITALARIO"."SNH_MST_ANTE_PATOLOGICOS"."FECHA_MODIFICACION" IS 'Última Fecha en la que se modificaron los antecedentes de enfermedades'
 ;
 
 
