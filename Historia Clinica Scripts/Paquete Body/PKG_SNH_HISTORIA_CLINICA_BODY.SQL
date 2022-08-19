@@ -1,4 +1,4 @@
-create or replace PACKAGE BODY              PKG_SNH_HISTORIA_CLINICA
+CREATE OR REPLACE PACKAGE BODY HOSPITALARIO.PKG_SNH_HISTORIA_CLINICA
 AS
     /****************************************************************************************************************************************************************************/
     FUNCTION FN_R_VALIDA_CATALOGO (pCodigoSup     IN VARCHAR2,
@@ -28,6 +28,7 @@ AS
 
     /****************************************************************************************************************************************************************************/
     PROCEDURE SNH_C_HISTORIA_CLINICA (
+
         pAdmisionServicioId IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.ADMISION_SERVICIO_ID%TYPE,
         pTipoHistoria       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.TIPO_HISTORIA%TYPE,
         pExpedienteId       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.EXPEDIENTE_ID%TYPE,
@@ -41,10 +42,24 @@ AS
     AS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_C_HISTORIA_CLINICA=>';
         pEstadoRegistro NUMBER (10);
+        pNumerAsignado NUMBER (10);
+        vExisteRegistro NUMBER(1);
     BEGIN
         pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
 
+        SELECT CASE WHEN EXISTS (SELECT  HISTORIA_CLINICA_ID FROM HOSPITALARIO.SNH_MST_HISTORIA_CLINICA
+                                  WHERE EXPEDIENTE_ID = pExpedienteId AND ESTADO_REGISTRO=pEstadoRegistro)
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=1 THEN 
+            pResultado:='YA EXISTE HISTORIA CLINICA PARA ESTE EXPEDIENTE';
+
+            ELSE 
+
         INSERT INTO HOSPITALARIO.SNH_MST_HISTORIA_CLINICA (
+
                                                 ADMISION_SERVICIO_ID,
                                                 TIPO_HISTORIA,
                                                 EXPEDIENTE_ID,
@@ -56,6 +71,7 @@ AS
                                                 FECHA_REGISTRO
                                                 )
         VALUES                                  (
+
                                                 pAdmisionServicioId,
                                                 pTipoHistoria,
                                                 pExpedienteId,
@@ -65,14 +81,17 @@ AS
                                                 pEstadoRegistro,
                                                 pUsuarioRegistro,
                                                 CURRENT_DATE
-                                                );
+                                                )
 
-        pResultado   := 'RESULTADO CREADO SATISFACTORIAMENTE';
-    --EXCEPTION
-    --WHEN OTHERS THEN
-    --   pResultado := 'ERROR INESPERADO';
-    --  pMsgError :=/*vFirma|| */ pResultado || sqlerrm;
-    --pMsgError:=pResultado;
+        RETURNING HISTORIA_CLINICA_ID INTO pNumerAsignado;
+
+       pResultado:=pNumerAsignado;
+        END IF ;
+    EXCEPTION
+    WHEN OTHERS THEN
+      pResultado := 'ERROR INESPERADO';
+     pMsgError :=vFirma||  pResultado || SQLERRM;
+
     END SNH_C_HISTORIA_CLINICA;
 
     /****************************************************************************************************************************************************************************/
@@ -84,8 +103,19 @@ AS
     IS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_D_HISTORIA_CLINICA=>';
         pEstado        NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstado      := FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_PAS);
+
+        SELECT CASE WHEN EXISTS (SELECT HISTORIA_CLINICA_ID FROM HOSPITALARIO.SNH_MST_HISTORIA_CLINICA 
+                                                              WHERE HISTORIA_CLINICA_ID=pHistoriaId) 
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL;
+
+        IF vExisteRegistro=0 THEN 
+        pResultado:='NO SE ENCONTRARON REGISTROS POR ACTUALIZAR';
+        ELSE 
 
         UPDATE HOSPITALARIO.SNH_MST_HISTORIA_CLINICA
         SET FECHA_MODIFICACION     = CURRENT_DATE,
@@ -94,100 +124,16 @@ AS
         WHERE HISTORIA_CLINICA_ID  = pHistoriaId;
 
         pResultado   := 'HISTORIA ELIMINADA SATISFACTORIAMENTE';
+        END IF;
+
     EXCEPTION
         WHEN OTHERS
         THEN
             pResultado   := 'ERROR INESPERADO';
             pMsgError    := vFirma || pResultado || SQLERRM;
+
     END SNH_D_HISTORIA_CLINICA;
 
-    /****************************************************************************************************************************************************************************/
-    PROCEDURE SNH_CRUD_HISTORIA_CLINICA (
-        pHistoriaId          IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.HISTORIA_CLINICA_ID%TYPE,
-        pAdmisionServicioId  IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.ADMISION_SERVICIO_ID%TYPE,
-        pTipoHistoria        IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.TIPO_HISTORIA%TYPE,
-        pExpedienteId        IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.EXPEDIENTE_ID%TYPE,
-        pUnidadSalud         IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.UNIDAD_SALUD_ID%TYPE,
-        pPersonalSalud       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.PERSONAL_SALUD_ID%TYPE,
-        pFechaHistoria       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_HISTORIA%TYPE,
-        pUsuarioRegistro     IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_REGISTRO%TYPE,
-        pFechaRegistro       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_REGISTRO%TYPE,
-        pUsuarioModificacion IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
-        pFechaModificacion   IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_MODIFICACION%TYPE,
-        pTipoOperacion       IN     VARCHAR2,
-        pMsgError            OUT VARCHAR2,
-        pResultado           OUT VARCHAR2)
-    AS
-        vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_CRUD_HISTORIA_CLINICA=>';
-    BEGIN
-        CASE
-            WHEN pTipoOperacion IS NULL
-            THEN
-                pResultado   := 'No se ha indicado el tipo de operacion';
-                RAISE eParametroNull;
-            WHEN pTipoOperacion = KINSERT
-            THEN
-                SNH_C_HISTORIA_CLINICA (
-                    pAdmisionServicioId  => pAdmisionServicioId,
-                    pTipoHistoria        => pTipoHistoria,
-                    pExpedienteId        => pExpedienteId,
-                    pUnidadSalud         => pUnidadSalud,
-                    pPersonalSalud       => pPersonalSalud,                  
-					pFechaHistoria       => pFechaHistoria,
-                    pUsuarioRegistro     => pUsuarioRegistro,
-                    pFechaRegistro       => pFechaRegistro,                    
-                    pMsgError            => pMsgError,
-                    pResultado           => pResultado);
-
-                CASE
-                    WHEN pMsgError IS NOT NULL
-                    THEN
-                        RAISE eSalidaConError;
-                    ELSE
-                        NULL;
-                END CASE;
-            WHEN pTipoOperacion = KDELETE
-            THEN
-                SNH_D_HISTORIA_CLINICA (
-                    pHistoriaId            => pHistoriaId,
-                    pUsuarioModificacion   => pUsuarioModificacion,
-                    pResultado             => pResultado,
-                    pMsgError              => pMsgError);
-
-                CASE
-                    WHEN pMsgError IS NOT NULL
-                    THEN
-                        RAISE eSalidaConError;
-                    ELSE
-                        NULL;
-                END CASE;
-            ELSE
-                pResultado   := 'EL PAR√ÅMETRO pTipoOperacion [' ||
-                                pTipoOperacion || '] ES INVALIDO';
-                RAISE eParametrosInvalidos;
-        END CASE;
-
-        CASE
-            WHEN pMsgError IS NOT NULL
-            THEN
-                RAISE eSalidaConError;
-            ELSE
-                NULL;
-        END CASE;
-    EXCEPTION
-        WHEN eSalidaConError
-        THEN
-            pResultado   := vFirma || pResultado;
-            pMsgError    := pResultado || pMsgError;
-        WHEN eParametrosInvalidos
-        THEN
-            pResultado   := vFirma || pResultado;
-            pMsgError    := pResultado;
-        WHEN OTHERS
-        THEN
-            pResultado   := vFirma || 'Error no controlado' || pResultado;
-            pMsgError    := pResultado || ' - ' || SQLERRM;
-    END SNH_CRUD_HISTORIA_CLINICA;
     /****************************************************************************************************************************************************************************/
 
     PROCEDURE SNH_R_HISTORIA_CLINICA( 
@@ -219,25 +165,69 @@ AS
             IF(pExpedienteId>0 and pHistoriaId is null) THEN
                 OPEN  cursorLectura FOR
                 SELECT
-                      HISTORIA_CLINICA_ID ,    
-                      ADMISION_SERVICIO_ID  ,
-                      TIPO_HISTORIA  ,
-                      EXPEDIENTE_ID  ,
-                      UNIDAD_SALUD_ID ,
-                      PERSONAL_SALUD_ID ,
-                      ESTADO_REGISTRO,
-                      USUARIO_REGISTRO,
-                      FECHA_REGISTRO,
-                      USUARIO_MODIFICACION,
-                      FECHA_MODIFICACION,
-                      FECHA_HISTORIA         
-                     FROM HOSPITALARIO.SNH_MST_HISTORIA_CLINICA 
-                     WHERE EXPEDIENTE_ID = pExpedienteId;
+                      DISTINCT
+                      HC.HISTORIA_CLINICA_ID ,    
+                      HC.ADMISION_SERVICIO_ID  ,
+                      SER.NOMBRE AS ADMISION_SERVICIO_NOMBRE,
+                      HC.TIPO_HISTORIA  ,
+                      TIPOHIS.VALOR AS TIPO_HISTORIA_NOMBRE,
+                      HC.EXPEDIENTE_ID  ,
+                      CEX.CODIGO_EXPEDIENTE_ELECTRONICO,
+                      HC.UNIDAD_SALUD_ID ,
+                      USAD.NOMBRE AS UNIDAD_SALUD_NOMBRE,
+                      ENTSAL.ENTIDAD_ADTVA_ID,
+                      ENTSAL.NOMBRE AS ENTIDAD_UNIDAD_SALUD,
+                      PERNOM.TIPO_IDENTIFICACION_ID,
+                      PERNOM.IDENTIFICACION_NUMERO AS IDENTIFICACION,
+                      PERNOM.TIPO_EXPEDIENTE_CODIGO,
+                      PERNOM.IDENTIFICACION_CODIGO,
+                      PERNOM.IDENTIFICACION_NOMBRE,
+                      PERNOM.PRIMER_NOMBRE,
+                      PERNOM.SEGUNDO_NOMBRE,
+                      PERNOM.PRIMER_APELLIDO,
+                      PERNOM.SEGUNDO_APELLIDO,
+                      PERNOM.NOMBRE_COMPLETO,
+                      PERNOM.SEXO_ID,
+                      PERNOM.SEXO_VALOR AS SEXO,
+                      HOSPITALARIO.PKG_SNH_EMERGENCIA.FN_OBT_EDAD_PERSONA_HST (PERNOM.FECHA_NACIMIENTO,HC.FECHA_REGISTRO,'F') AS EDAD,
+                      PERNOM.FECHA_NACIMIENTO,
+                      PERNOM.PAIS_NACIMIENTO_ID,
+                      PERNOM.PAIS_ORIGEN_NOMBRE,
+                      PERNOM.MUNICIPIO_NACIMIENTO_NOMBRE,
+                      PERNOM.MUNICIPIO_NACIMIENTO_ID,
+                      HC.PERSONAL_SALUD_ID ,
+                      HC.ESTADO_REGISTRO,
+                      CODEST.valor as ESTADO_NOMBRE,
+                      HC.USUARIO_REGISTRO,
+                      HC.FECHA_REGISTRO,
+                      HC.USUARIO_MODIFICACION,
+                      HC.FECHA_MODIFICACION,
+                      HC.FECHA_HISTORIA         
+                     FROM HOSPITALARIO.SNH_MST_HISTORIA_CLINICA HC
+                     INNER JOIN HOSPITALARIO.SNH_MST_ADMISION_SERVICIOS ADSER 
+                     ON HC.ADMISION_SERVICIO_ID=ADSER.ADMISION_SERVICIO_ID
+                     INNER JOIN SNH_CAT_SERVICIOS SER 
+                     ON ADSER.SERVICIO_ID=SER.SERVICIO_ID
+                     INNER JOIN HOSPITALARIO.SNH_MST_CODIGO_EXPEDIENTE CEX
+                     ON HC.EXPEDIENTE_ID=CEX.EXPEDIENTE_ID
+                     INNER JOIN CATALOGOS.SBC_CAT_UNIDADES_SALUD USAD
+                     ON USAD.UNIDAD_SALUD_ID=HC.UNIDAD_SALUD_ID
+                     INNER JOIN CATALOGOS.SBC_CAT_ENTIDADES_ADTVAS ENTSAL
+                     ON ENTSAL.ENTIDAD_ADTVA_ID=USAD.ENTIDAD_ADTVA_ID
+                     INNER JOIN CATALOGOS.SBC_MST_PERSONAS P
+                     ON P.EXPEDIENTE_ID = HC.EXPEDIENTE_ID
+                     INNER JOIN CATALOGOS.SBC_MST_PERSONAS_NOMINAL PERNOM
+                     ON P.PERSONA_ID = PERNOM.PERSONA_ID AND PERNOM.EXPEDIENTE_ID=pExpedienteId
+                     INNER JOIN  CATALOGOS.SBC_CAT_CATALOGOS CODEST
+                     ON CODEST.CATALOGO_ID=HC.ESTADO_REGISTRO
+                     INNER JOIN  CATALOGOS.SBC_CAT_CATALOGOS TIPOHIS 
+                     ON TIPOHIS.CATALOGO_ID=HC.TIPO_HISTORIA  
+                     WHERE HC.EXPEDIENTE_ID = pExpedienteId;
 
-                SELECT  COUNT(*)    
-                             into recCount  
-                     FROM HOSPITALARIO.SNH_MST_HISTORIA_CLINICA 
-                     WHERE EXPEDIENTE_ID = pExpedienteId;
+                SELECT  COUNT(*)
+                              into recCount
+                      FROM HOSPITALARIO.SNH_MST_HISTORIA_CLINICA
+                      WHERE EXPEDIENTE_ID = pExpedienteId;
 
                 IF recCount = 0 THEN
                   pResultado:='NO SE ENCONTRARON DATOS CONCURRENTES';
@@ -249,21 +239,64 @@ AS
                      OPEN  cursorLectura FOR
 
                     SELECT
-                      HISTORIA_CLINICA_ID ,    
-                      ADMISION_SERVICIO_ID  ,
-                      TIPO_HISTORIA  ,
-                      EXPEDIENTE_ID  ,
-                      UNIDAD_SALUD_ID ,
-                      PERSONAL_SALUD_ID ,
-                      ESTADO_REGISTRO,
-                      USUARIO_REGISTRO,
-                      FECHA_REGISTRO,
-                      USUARIO_MODIFICACION,
-                      FECHA_MODIFICACION,
-                      FECHA_HISTORIA
-                    FROM HOSPITALARIO.SNH_MST_HISTORIA_CLINICA 
-                     WHERE EXPEDIENTE_ID = pExpedienteId and
-                     HISTORIA_CLINICA_ID  = pHistoriaId;
+                      DISTINCT
+                      HC.HISTORIA_CLINICA_ID ,    
+                      HC.ADMISION_SERVICIO_ID  ,
+                      SER.NOMBRE AS ADMISION_SERVICIO_NOMBRE,
+                      HC.TIPO_HISTORIA  ,
+                      TIPOHIS.VALOR AS TIPO_HISTORIA_NOMBRE,
+                      HC.EXPEDIENTE_ID  ,
+                      CEX.CODIGO_EXPEDIENTE_ELECTRONICO,
+                      HC.UNIDAD_SALUD_ID ,
+                      USAD.NOMBRE AS UNIDAD_SALUD_NOMBRE,
+                      ENTSAL.ENTIDAD_ADTVA_ID,
+                      ENTSAL.NOMBRE AS ENTIDAD_UNIDAD_SALUD,
+                      PERNOM.TIPO_IDENTIFICACION_ID,
+                      PERNOM.IDENTIFICACION_NUMERO AS IDENTIFICACION,
+                      PERNOM.TIPO_EXPEDIENTE_CODIGO,
+                      PERNOM.IDENTIFICACION_CODIGO,
+                      PERNOM.IDENTIFICACION_NOMBRE,
+                      PERNOM.PRIMER_NOMBRE,
+                      PERNOM.SEGUNDO_NOMBRE,
+                      PERNOM.PRIMER_APELLIDO,
+                      PERNOM.SEGUNDO_APELLIDO,
+                      PERNOM.NOMBRE_COMPLETO,
+                      PERNOM.SEXO_ID,
+                      PERNOM.SEXO_VALOR AS SEXO,
+                      HOSPITALARIO.PKG_SNH_EMERGENCIA.FN_OBT_EDAD_PERSONA_HST (PERNOM.FECHA_NACIMIENTO,HC.FECHA_REGISTRO,'F') AS EDAD,
+                      PERNOM.FECHA_NACIMIENTO,
+                      PERNOM.PAIS_NACIMIENTO_ID,
+                      PERNOM.PAIS_ORIGEN_NOMBRE,
+                      PERNOM.MUNICIPIO_NACIMIENTO_NOMBRE,
+                      PERNOM.MUNICIPIO_NACIMIENTO_ID,
+                      HC.PERSONAL_SALUD_ID ,
+                      HC.ESTADO_REGISTRO,
+                      CODEST.valor as ESTADO_NOMBRE,
+                      HC.USUARIO_REGISTRO,
+                      HC.FECHA_REGISTRO,
+                      HC.USUARIO_MODIFICACION,
+                      HC.FECHA_MODIFICACION,
+                      HC.FECHA_HISTORIA         
+                     FROM HOSPITALARIO.SNH_MST_HISTORIA_CLINICA HC
+                     INNER JOIN HOSPITALARIO.SNH_MST_ADMISION_SERVICIOS ADSER 
+                     ON HC.ADMISION_SERVICIO_ID=ADSER.ADMISION_SERVICIO_ID
+                     INNER JOIN SNH_CAT_SERVICIOS SER 
+                     ON ADSER.SERVICIO_ID=SER.SERVICIO_ID
+                     INNER JOIN HOSPITALARIO.SNH_MST_CODIGO_EXPEDIENTE CEX
+                     ON HC.EXPEDIENTE_ID=CEX.EXPEDIENTE_ID
+                     INNER JOIN CATALOGOS.SBC_CAT_UNIDADES_SALUD USAD
+                     ON USAD.UNIDAD_SALUD_ID=HC.UNIDAD_SALUD_ID
+                     INNER JOIN CATALOGOS.SBC_CAT_ENTIDADES_ADTVAS ENTSAL
+                     ON ENTSAL.ENTIDAD_ADTVA_ID=USAD.ENTIDAD_ADTVA_ID
+                     INNER JOIN CATALOGOS.SBC_MST_PERSONAS P
+                     ON P.EXPEDIENTE_ID = HC.EXPEDIENTE_ID
+                     INNER JOIN CATALOGOS.SBC_MST_PERSONAS_NOMINAL PERNOM
+                     ON P.PERSONA_ID = PERNOM.PERSONA_ID AND PERNOM.EXPEDIENTE_ID=pExpedienteId
+                     INNER JOIN  CATALOGOS.SBC_CAT_CATALOGOS CODEST
+                     ON CODEST.CATALOGO_ID=HC.ESTADO_REGISTRO
+                     INNER JOIN  CATALOGOS.SBC_CAT_CATALOGOS TIPOHIS 
+                     ON TIPOHIS.CATALOGO_ID=HC.TIPO_HISTORIA  
+                     WHERE HC.EXPEDIENTE_ID = pExpedienteId;
 
                  SELECT  COUNT(*)    
                              into recCount  
@@ -277,7 +310,111 @@ AS
             END IF;
 
            pRegistro :=  cursorLectura;            
+
             END SNH_R_HISTORIA_CLINICA;
+
+    /****************************************************************************************************************************************************************************/
+    PROCEDURE SNH_CRUD_HISTORIA_CLINICA (
+        pHistoriaId          IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.HISTORIA_CLINICA_ID%TYPE,
+        pAdmisionServicioId  IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.ADMISION_SERVICIO_ID%TYPE,
+        pTipoHistoria        IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.TIPO_HISTORIA%TYPE,
+        pExpedienteId        IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.EXPEDIENTE_ID%TYPE,
+        pUnidadSalud         IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.UNIDAD_SALUD_ID%TYPE,
+        pPersonalSalud       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.PERSONAL_SALUD_ID%TYPE,
+        pFechaHistoria       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_HISTORIA%TYPE,
+        pUsuarioRegistro     IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_REGISTRO%TYPE,
+        pFechaRegistro       IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_REGISTRO%TYPE,
+        pUsuarioModificacion IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
+        pFechaModificacion   IN     HOSPITALARIO.SNH_MST_HISTORIA_CLINICA.FECHA_MODIFICACION%TYPE,
+        pTipoOperacion       IN     VARCHAR2,
+        pRegistro            OUT   VAR_REFCURSOR,
+        pMsgError            OUT VARCHAR2,
+        pResultado           OUT VARCHAR2)
+    AS
+        vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_CRUD_HISTORIA_CLINICA=>';
+    BEGIN
+        CASE
+            WHEN pTipoOperacion IS NULL
+            THEN
+                pResultado   := 'No se ha indicado el tipo de operacion';
+                RAISE eParametroNull;
+            WHEN pTipoOperacion = KINSERT
+            THEN
+                SNH_C_HISTORIA_CLINICA (
+
+                    pAdmisionServicioId  => pAdmisionServicioId,
+                    pTipoHistoria        => pTipoHistoria,
+                    pExpedienteId        => pExpedienteId,
+                    pUnidadSalud         => pUnidadSalud,
+                    pPersonalSalud       => pPersonalSalud,                  
+					pFechaHistoria       => pFechaHistoria,
+                    pUsuarioRegistro     => pUsuarioRegistro,
+                    pFechaRegistro       => pFechaRegistro,                    
+                    pMsgError            => pMsgError,
+                    pResultado           => pResultado);
+
+                CASE
+                    WHEN pMsgError IS NOT NULL
+                    THEN
+                        RAISE eSalidaConError;
+                    ELSE
+                        NULL;
+                END CASE;
+
+            WHEN pTipoOperacion = KCONSULTAR
+             THEN
+                 SNH_R_HISTORIA_CLINICA (
+                     pExpedienteId          => pExpedienteId,
+                     pHistoriaId            => pHistoriaId,
+                     pRegistro              => pRegistro,
+                     pResultado             => pResultado,
+                     pMsgError              => pMsgError);
+
+                 CASE
+                     WHEN pMsgError IS NOT NULL
+                     THEN
+                         RAISE eSalidaConError;
+                     ELSE
+                         NULL;
+                 END CASE;
+
+            WHEN pTipoOperacion = KDELETE
+            THEN
+                SNH_D_HISTORIA_CLINICA (
+                    pHistoriaId            => pHistoriaId,
+                    pUsuarioModificacion   => pUsuarioModificacion,
+                    pResultado             => pResultado,
+                    pMsgError              => pMsgError);
+
+                CASE
+                    WHEN pMsgError IS NOT NULL
+                    THEN
+                        RAISE eSalidaConError;
+                    ELSE
+                        NULL;
+                END CASE;
+            ELSE
+                pResultado   := 'EL PAR¡METRO pTipoOperacion [' ||
+                                pTipoOperacion || '] ES INVALIDO';
+                RAISE eParametrosInvalidos;
+        END CASE;
+
+
+    EXCEPTION
+        WHEN eSalidaConError
+        THEN
+            pResultado   := vFirma || pResultado;
+            pMsgError    := pResultado || pMsgError;
+        WHEN eParametrosInvalidos
+        THEN
+            pResultado   := vFirma || pResultado;
+            pMsgError    := pResultado;
+        WHEN OTHERS
+        THEN
+            pResultado   := vFirma || 'Error no controlado' || pResultado;
+            pMsgError    := pResultado || ' - ' || SQLERRM;
+    END SNH_CRUD_HISTORIA_CLINICA;
+
 
     /****************************************************************************************************************************************************************************/
     PROCEDURE SNH_C_DET_HISTORIA_CLINICA (
@@ -287,6 +424,7 @@ AS
         pInterconsultas     IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.INTERCONSULTAS%TYPE,
         pUsuarioRegistro    IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.USUARIO_REGISTRO%TYPE,
         pFechaRegistro      IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.FECHA_REGISTRO%TYPE,
+       -- pRegistro           OUT    VAR_REFCURSOR,
         pResultado          OUT VARCHAR2,
         pMsgError           OUT VARCHAR2)
     AS
@@ -337,8 +475,21 @@ AS
     AS
         vFirma         VARCHAR2 (200) := 'PKG_SNH_HISTORIA_CLINICA.SNH_U_DET_HISTORIA_CLINICA=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   := FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+        SELECT CASE WHEN EXISTS (SELECT DET_HISTORIA_CLINICA_ID FROM HOSPITALARIO.SNH_DET_HISTORIA_CLINICA
+                                                                    WHERE DET_HISTORIA_CLINICA_ID=pDetHistoriaId)
+        THEN 1
+        ELSE 0
+        END 
+        INTO vExisteRegistro FROM DUAL;
+
+        IF vExisteRegistro=0 THEN 
+        pResultado:='NO EXISTEN REGISTROS POR ACTUALIZAR';
+
+        ELSE 
 
         UPDATE HOSPITALARIO.SNH_DET_HISTORIA_CLINICA
         SET HISTORIA_CLINICA_ID    = NVL (pHistoriaId, HISTORIA_CLINICA_ID),
@@ -348,9 +499,10 @@ AS
             ESTADO_REGISTRO        = NVL (pEstadoRegistro, ESTADO_REGISTRO),
             USUARIO_MODIFICACION   = NVL (pUsuarioModificacion, USUARIO_MODIFICACION),
             FECHA_MODIFICACION     = CURRENT_DATE
-        WHERE DET_HISTORIA_CLINICA_ID = pDetHistoriaId;
+        WHERE DET_HISTORIA_CLINICA_ID = DET_HISTORIA_CLINICA_ID;
 
         pResultado   :='DETALLE DE HISTORIA CLINICA ACTUALIZADA SATISFACTORIAMENTE';
+        END IF;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -368,8 +520,22 @@ AS
     AS
         vFirma         VARCHAR2 (200) := 'PKG_SNH_HISTORIA_CLINICA.SNH_D_DET_HISTORIA_CLINICA=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   := FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_PAS);
+
+
+        SELECT CASE WHEN EXISTS (SELECT DET_HISTORIA_CLINICA_ID FROM HOSPITALARIO.SNH_DET_HISTORIA_CLINICA
+                                                                    WHERE DET_HISTORIA_CLINICA_ID=pDetHistoriaId)
+        THEN 1
+        ELSE 0
+        END 
+        INTO vExisteRegistro FROM DUAL;
+
+        IF vExisteRegistro=0 THEN 
+        pResultado:='NO EXISTEN REGISTROS PARA ELIMINAR';
+
+        ELSE 
 
         UPDATE HOSPITALARIO.SNH_DET_HISTORIA_CLINICA
         SET ESTADO_REGISTRO        = NVL (pEstadoRegistro, ESTADO_REGISTRO),
@@ -378,6 +544,7 @@ AS
         WHERE DET_HISTORIA_CLINICA_ID = pDetHistoriaId;
 
         pResultado   :='EL DETALLE DE LA HISTORIA CLINICA FUE  ELIMINADA SATISFACTORIAMENTE';
+        END IF;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -388,9 +555,9 @@ AS
     PROCEDURE SNH_R_DET_HISTORIA_CLINICA( 
         pDetHistoriaId       IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.DET_HISTORIA_CLINICA_ID%TYPE,
         pHistoriaId          IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.HISTORIA_CLINICA_ID%TYPE,
-        pRegistro           OUT VAR_REFCURSOR,
-        pResultado        OUT VARCHAR2,
-        pMsgError         OUT VARCHAR2
+        pRegistro            OUT VAR_REFCURSOR,
+        pResultado           OUT VARCHAR2,
+        pMsgError            OUT VARCHAR2
                                         ) AS
     vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_R_DET_HISTORIA_CLINICA=>';
     cursorLectura VAR_REFCURSOR;
@@ -399,14 +566,15 @@ AS
     BEGIN   
 
            SELECT CASE WHEN EXISTS (SELECT HISTORIA_CLINICA_ID FROM HOSPITALARIO.SNH_DET_HISTORIA_CLINICA
-                                      WHERE HISTORIA_CLINICA_ID = pHistoriaId)
-            THEN 1
-            ELSE 0            
-            END INTO existeRegistro FROM dual;
+                                       WHERE DET_HISTORIA_CLINICA_ID  =pDetHistoriaId)
+             THEN 1
+             ELSE 0
+             END INTO existeRegistro FROM dual;
 
-            IF(existeRegistro=0) THEN
-                pResultado:='NO SE ENCONTRARON DATOS CONCURRENTES';
-            END IF;
+             IF(existeRegistro=0 and pHistoriaId is null and pDetHistoriaId is not null) THEN
+                 pResultado:='NO SE ENCONTRARON DATOS CONCURRENTES CON ID_DET_HISTORIA INGRESADO';
+             END IF;
+
 
             IF(pHistoriaId>0 and pDetHistoriaId is null) THEN
                 OPEN  cursorLectura FOR
@@ -431,6 +599,16 @@ AS
                 IF recCount = 0 THEN
                   pResultado:='NO SE ENCONTRARON DATOS CONCURRENTES';
                END IF;
+             END IF;
+
+             SELECT CASE WHEN EXISTS (SELECT HISTORIA_CLINICA_ID FROM HOSPITALARIO.SNH_DET_HISTORIA_CLINICA
+                                       WHERE HISTORIA_CLINICA_ID  =pHistoriaId)
+             THEN 1
+             ELSE 0
+             END INTO existeRegistro FROM dual;
+
+             IF(existeRegistro=0 and pDetHistoriaId is null and pHistoriaId is not null ) THEN
+                 pResultado:='NO SE ENCONTRARON DATOS CONCURRENTES CON ID_HISTORIA INGRESADO';
              END IF;
 
              IF (pHistoriaId>0 and pDetHistoriaId is not null) THEN
@@ -476,7 +654,7 @@ AS
         pUsuarioModificacion IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.USUARIO_MODIFICACION%TYPE,
         pFechaModificacion   IN     HOSPITALARIO.SNH_DET_HISTORIA_CLINICA.FECHA_MODIFICACION%TYPE,
         pTipoOperacion              VARCHAR2,
-        --pRegistro            OUT VAR_REFCURSOR,
+        pRegistro            OUT VAR_REFCURSOR,
         pResultado           OUT VARCHAR2,
         pMsgError            OUT VARCHAR2)
     AS
@@ -529,6 +707,24 @@ AS
                     ELSE
                         NULL;
                 END CASE;
+
+            WHEN pTipoOperacion = KCONSULTAR
+             THEN
+                 SNH_R_DET_HISTORIA_CLINICA (
+                                     pDetHistoriaId       => pDetHistoriaId,
+                                     pHistoriaId          => pHistoriaId,
+                                     pRegistro            => pRegistro,
+                                     pResultado           => pResultado,
+                                     pMsgError            => pMsgError
+                                     );
+
+                 CASE
+                     WHEN pMsgError IS NOT NULL
+                     THEN
+                         RAISE eSalidaConError;
+                     ELSE
+                         NULL;
+                 END CASE;
             WHEN pTipoOperacion = KDELETE
             THEN
                 SNH_D_DET_HISTORIA_CLINICA (
@@ -547,7 +743,7 @@ AS
                         NULL;
                 END CASE;
             ELSE
-                pResultado   := 'EL TIPO DE OPERACI√ìN  ES INVALIDO';
+                pResultado   := 'EL TIPO DE OPERACI”N  ES INVALIDO';
                 RAISE eParametrosInvalidos;
         END CASE;
     EXCEPTION
@@ -584,8 +780,20 @@ AS
     AS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_C_ANTECEDENTES_PARTO=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   := FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+       SELECT CASE WHEN EXISTS (SELECT  HISTORIA_CLINICA_ID FROM HOSPITALARIO.SNH_MST_ANTE_PARTO 
+                                  WHERE HISTORIA_CLINICA_ID = pHistoriaClinicaId AND ESTADO_REGISTRO=pEstadoRegistro)
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=1 THEN 
+            pResultado:='LA HISTORIA CLINICA YA TIENE ANTECEDENTES DE PARTO';
+
+            ELSE 
 
         INSERT INTO HOSPITALARIO.SNH_MST_ANTE_PARTO (
                                          HISTORIA_CLINICA_ID,
@@ -616,6 +824,7 @@ AS
                                         CURRENT_DATE);
 
         pResultado   := 'ANTECEDENTES DEL PARTO  CREADO SATISFACTORIAMENTE';
+        END IF;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -641,8 +850,20 @@ AS
     AS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_U_ANTECEDENTES_PARTO=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+      SELECT CASE WHEN EXISTS (SELECT  ANTE_PARTO_ID FROM HOSPITALARIO.SNH_MST_ANTE_PARTO 
+                                  WHERE ANTE_PARTO_ID = pAntecedentesId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=0 THEN 
+            pResultado:='NO EXISTEN ANTECDENTES DE PARTO QUE ACTUALIZAR';
+
+            ELSE 
 
         UPDATE HOSPITALARIO.SNH_MST_ANTE_PARTO
         SET 
@@ -661,6 +882,7 @@ AS
         WHERE ANTE_PARTO_ID = pAntecedentesId;
 
         pResultado   :='ANTECEDENTES DEL PARTO  ACTUALIZADOS  SATISFACTORIAMENTE';
+        END IF;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -677,8 +899,20 @@ AS
     AS
         vFirma         VARCHAR2 (200) := 'PKG_SNH_HISTORIA_CLINICA.SNH_D_ANTECEDENTES_PARTO=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_PAS);
+
+     SELECT CASE WHEN EXISTS (SELECT  ANTE_PARTO_ID FROM HOSPITALARIO.SNH_MST_ANTE_PARTO 
+                                  WHERE ANTE_PARTO_ID = pAntecedentesId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=0 THEN 
+            pResultado:='NO EXISTEN ANTECEDENTES DE PARTO A ELIMINAR';
+
+            ELSE
 
         UPDATE HOSPITALARIO.SNH_MST_ANTE_PARTO
         SET 
@@ -688,6 +922,7 @@ AS
         WHERE ANTE_PARTO_ID = pAntecedentesId;
 
         pResultado   :='ANTECEDENTES DEL PARTO  ELIMINADOS  SATISFACTORIAMENTE';
+        END IF; 
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -791,8 +1026,8 @@ AS
                         NULL;
                 END CASE;
             ELSE
-                --pResultado := 'EL PAR√ÅMETRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
-                pResultado   := 'EL TIPO DE OPERACI√ìN  ES INVALIDO';
+                --pResultado := 'EL PAR¡METRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
+                pResultado   := 'EL TIPO DE OPERACI”N  ES INVALIDO';
                 RAISE eParametrosInvalidos;
         END CASE;
     EXCEPTION
@@ -829,8 +1064,21 @@ AS
     AS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_C_MST_ANTE_POSTNATALES=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   := FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+     SELECT CASE WHEN EXISTS (SELECT  ANTE_POSTNATALES_ID FROM SNH_MST_ANTE_POSTNATALES 
+                                  WHERE HISTORIA_CLINICA_ID = pHistoriaClinicaId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=1 THEN 
+            pResultado:='LA HISTORIA CLINICA YA TIENE ANTECEDENTES POSTNATALES';
+
+            ELSE
+
 
         INSERT INTO HOSPITALARIO.SNH_MST_ANTE_POSTNATALES (
                                          HISTORIA_CLINICA_ID, 
@@ -866,6 +1114,7 @@ AS
                                         );
 
         pResultado   := 'ANTECEDENTES POSTNATALES CREADOS SATISFACTORIAMENTE';
+        END IF; 
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -894,8 +1143,21 @@ AS
     AS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_U_MST_ANTE_POSTNATALES=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+
+     SELECT CASE WHEN EXISTS (SELECT  ANTE_POSTNATALES_ID FROM SNH_MST_ANTE_POSTNATALES 
+                                  WHERE ANTE_POSTNATALES_ID = pAntePostnatalesId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=0 THEN 
+            pResultado:='NO HAY DATOS POR ACTUALIZAR';
+
+            ELSE
 
         UPDATE SNH_MST_ANTE_POSTNATALES
         SET 
@@ -916,6 +1178,7 @@ AS
         WHERE ANTE_POSTNATALES_ID = pAntePostnatalesId;
 
         pResultado   :='ANTECEDENTES POSTNATALES  ACTUALIZADOS  SATISFACTORIAMENTE';
+        END IF ;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -933,8 +1196,20 @@ AS
     AS
         vFirma         VARCHAR2 (200) := 'PKG_SNH_HISTORIA_CLINICA.SNH_D_ANTECEDENTES_PARTO=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_PAS);
+
+      SELECT CASE WHEN EXISTS (SELECT  ANTE_POSTNATALES_ID FROM SNH_MST_ANTE_POSTNATALES 
+                                  WHERE ANTE_POSTNATALES_ID = pAntePostnatalesId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=0 THEN 
+            pResultado:='NO HAY DATOS POR ELIMINAR';
+
+            ELSE
 
         UPDATE  SNH_MST_ANTE_POSTNATALES
         SET 
@@ -944,6 +1219,7 @@ AS
         WHERE  ANTE_POSTNATALES_ID = pAntePostnatalesId;
 
         pResultado   :='ANTECEDENTES POSTNATALES   ELIMINADOS  SATISFACTORIAMENTE';
+        END IF ; 
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -1057,8 +1333,8 @@ AS
                         NULL;
                 END CASE;
             ELSE
-                --pResultado := 'EL PAR√ÅMETRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
-                pResultado   := 'EL TIPO DE OPERACI√ìN  ES INVALIDO';
+                --pResultado := 'EL PAR¡METRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
+                pResultado   := 'EL TIPO DE OPERACI”N  ES INVALIDO';
                 RAISE eParametrosInvalidos;
         END CASE;
     EXCEPTION
@@ -1090,8 +1366,20 @@ AS
     AS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_C_MST_ALIMEN_PEDIATRICA=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (10);
     BEGIN
         pEstadoRegistro   := FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+      SELECT CASE WHEN EXISTS (SELECT  ALIMEN_PEDIATRICA_ID FROM SNH_MST_ALIMEN_PEDIATRICA
+                                  WHERE HISTORIA_CLINICA_ID = pHistoriaId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=1 THEN 
+            pResultado:='LA HISTORIA CLINICA YA TIENE DATOS DE ALIMENTACION PEDIATRICA';
+
+            ELSE
 
         INSERT INTO HOSPITALARIO.SNH_MST_ALIMEN_PEDIATRICA (
                                          HISTORIA_CLINICA_ID,
@@ -1116,6 +1404,7 @@ AS
                                         CURRENT_DATE);
 
         pResultado   := 'DATOS DE ALIMENTACION PEDIATRICA CREADOS  SATISFACTORIAMENTE';
+        END IF;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -1138,8 +1427,20 @@ AS
     AS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_U_MST_ALIMEN_PEDIATRICA=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+     SELECT CASE WHEN EXISTS (SELECT  ALIMEN_PEDIATRICA_ID FROM SNH_MST_ALIMEN_PEDIATRICA
+                                  WHERE ALIMEN_PEDIATRICA_ID = pAlimentPediatricaId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=0 THEN 
+            pResultado:='NO EXISTEN DATOS POR ACTUALIZAR';
+
+            ELSE
 
         UPDATE SNH_MST_ALIMEN_PEDIATRICA
         SET 
@@ -1155,6 +1456,7 @@ AS
         WHERE ALIMEN_PEDIATRICA_ID = pAlimentPediatricaId;
 
         pResultado   :='DATOS DE ALIMENTACION PEDIATRICA   ACTUALIZADOS  SATISFACTORIAMENTE';
+        END IF ;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -1173,9 +1475,20 @@ AS
     AS
         vFirma         VARCHAR2 (200) := 'PKG_SNH_HISTORIA_CLINICA.SNH_D_MST_ALIMEN_PEDIATRICA=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1); 
     BEGIN
         pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_PAS);
 
+        SELECT CASE WHEN EXISTS (SELECT  ALIMEN_PEDIATRICA_ID FROM SNH_MST_ALIMEN_PEDIATRICA
+                                  WHERE ALIMEN_PEDIATRICA_ID = pAlimentPediatricaId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=0 THEN 
+            pResultado:='NO EXISTEN DATOS POR ELIMINAR';
+
+            ELSE
         UPDATE  SNH_MST_ALIMEN_PEDIATRICA
         SET 
             ESTADO_REGISTRO         = NVL (pEstadoRegistro, ESTADO_REGISTRO),
@@ -1184,6 +1497,7 @@ AS
         WHERE  ALIMEN_PEDIATRICA_ID = pAlimentPediatricaId;
 
         pResultado   :='DATOS DE ALIMENTACION PEDIATRICA ELIMINADOS  SATISFACTORIAMENTE';
+        END IF; 
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -1283,8 +1597,8 @@ AS
                         NULL;
                 END CASE;
             ELSE
-                --pResultado := 'EL PAR√ÅMETRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
-                pResultado   := 'EL TIPO DE OPERACI√ìN  ES INVALIDO';
+                --pResultado := 'EL PAR¡METRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
+                pResultado   := 'EL TIPO DE OPERACI”N  ES INVALIDO';
                 RAISE eParametrosInvalidos;
         END CASE;
     EXCEPTION
@@ -1314,8 +1628,20 @@ AS
     AS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_C_MST_ANTE_PSICOMOTOR=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   := FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+      SELECT CASE WHEN EXISTS (SELECT  ANTE_PSICOMOTOR_ID FROM SNH_MST_ANTE_PSICOMOTOR
+                                  WHERE HISTORIA_CLINICA_ID = pHistoriaId AND TIPO_DESARROLLO=pTipoDesarrollo )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=1 THEN 
+            pResultado:='LA HISTORIA CLINICA YA TIENE ESTE DESARROLLO PSICOMOTOR';
+
+            ELSE
 
         INSERT INTO HOSPITALARIO.SNH_MST_ANTE_PSICOMOTOR (
                                          HISTORIA_CLINICA_ID, 
@@ -1336,6 +1662,7 @@ AS
                                         CURRENT_DATE);
 
         pResultado   := 'DATOS DE ANTECEDENTES PSICOMOTOR CREADOS  SATISFACTORIAMENTE';
+        END IF; 
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -1356,8 +1683,20 @@ AS
     AS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_U_MST_ANTE_PSICOMOTOR=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+     SELECT CASE WHEN EXISTS (SELECT  ANTE_PSICOMOTOR_ID FROM SNH_MST_ANTE_PSICOMOTOR
+                                  WHERE ANTE_PSICOMOTOR_ID = pAntePsicomotorId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=0 THEN 
+            pResultado:='NO HAY DATOS QUE ACTUALIZAR';
+
+            ELSE
 
         UPDATE SNH_MST_ANTE_PSICOMOTOR
         SET 
@@ -1371,6 +1710,7 @@ AS
         WHERE ANTE_PSICOMOTOR_ID   = pAntePsicomotorId;
 
         pResultado   :='DATOS DE ANTECEDENTES PSICOMOTOR   ACTUALIZADOS  SATISFACTORIAMENTE';
+        END IF;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -1387,8 +1727,20 @@ AS
     AS
         vFirma         VARCHAR2 (200) := 'PKG_SNH_HISTORIA_CLINICA.SNH_D_MST_ANTE_PSICOMOTOR=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_PAS);
+
+     SELECT CASE WHEN EXISTS (SELECT  ANTE_PSICOMOTOR_ID FROM SNH_MST_ANTE_PSICOMOTOR
+                                  WHERE ANTE_PSICOMOTOR_ID = pAntePsicomotorId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=0 THEN 
+            pResultado:='NO HAY DATOS QUE ELIMINAR';
+
+            ELSE
 
         UPDATE  SNH_MST_ANTE_PSICOMOTOR
         SET 
@@ -1398,6 +1750,7 @@ AS
         WHERE  ANTE_PSICOMOTOR_ID   = pAntePsicomotorId;
 
         pResultado   :='DATOS DE ANTECEDENTES PSICOMOTOR ELIMINADOS  SATISFACTORIAMENTE';
+        END IF ;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -1488,8 +1841,8 @@ AS
                         NULL;
                 END CASE;
             ELSE
-                --pResultado := 'EL PAR√ÅMETRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
-                pResultado   := 'EL TIPO DE OPERACI√ìN  ES INVALIDO';
+                --pResultado := 'EL PAR¡METRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
+                pResultado   := 'EL TIPO DE OPERACI”N  ES INVALIDO';
                 RAISE eParametrosInvalidos;
         END CASE;
     EXCEPTION
@@ -1529,8 +1882,20 @@ AS
     AS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_C_ANTE_SOCIOECONOMICO=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   := FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
+
+      SELECT CASE WHEN EXISTS (SELECT  ANTE_SOCIOECONOMICO_ID FROM SNH_MST_ANTE_SOCIOECONOMICO
+                                  WHERE HISTORIA_CLINICA_ID = pHistoriaId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=1 THEN 
+            pResultado:='LA HISTORIA CLINICA YA TIENE ANTECEDENTES SOCIOECONOMICOS';
+
+            ELSE
 
         INSERT INTO HOSPITALARIO.SNH_MST_ANTE_SOCIOECONOMICO (
                                          HISTORIA_CLINICA_ID, 
@@ -1577,6 +1942,7 @@ AS
                                         CURRENT_DATE);
 
         pResultado   := 'DATOS DE ANTECEDENTES SOCIOECONOMICOS CREADOS  SATISFACTORIAMENTE';
+        END IF ;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -1609,9 +1975,20 @@ AS
     AS
         vFirma         VARCHAR2 (200):= 'PKG_SNH_HISTORIA_CLINICA.SNH_U_ANTE_SOCIOECONOMICO=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_ACT);
 
+      SELECT CASE WHEN EXISTS (SELECT  ANTE_SOCIOECONOMICO_ID FROM SNH_MST_ANTE_SOCIOECONOMICO
+                                  WHERE ANTE_SOCIOECONOMICO_ID = pAnteSocioeconomicoId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=0 THEN 
+            pResultado:='NO EXISTEN DATOS QUE ACTUALIZAR';
+
+            ELSE
         UPDATE SNH_MST_ANTE_SOCIOECONOMICO
         SET 
             HISTORIA_CLINICA_ID     = NVL    (pHistoriaId,HISTORIA_CLINICA_ID),
@@ -1636,6 +2013,7 @@ AS
         WHERE ANTE_SOCIOECONOMICO_ID = pAnteSocioeconomicoId;
 
         pResultado   :='DATOS DE ANTECEDENTES SOCIO ECONOMICOS ACTUALIZADOS  SATISFACTORIAMENTE';
+        END IF;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -1653,8 +2031,21 @@ AS
     AS
         vFirma         VARCHAR2 (200) := 'PKG_SNH_HISTORIA_CLINICA.SNH_D_ANTE_SOCIOECONOMICO=>';
         pEstadoRegistro NUMBER (10);
+        vExisteRegistro NUMBER (1);
     BEGIN
         pEstadoRegistro   :=FN_R_VALIDA_CATALOGO (K_STATE_REG, K_CAT_REG_PAS);
+
+
+        SELECT CASE WHEN EXISTS (SELECT  ANTE_SOCIOECONOMICO_ID FROM SNH_MST_ANTE_SOCIOECONOMICO
+                                  WHERE ANTE_SOCIOECONOMICO_ID = pAnteSocioeconomicoId )
+        THEN 1
+        ELSE 0
+        END INTO vExisteRegistro FROM DUAL; 
+
+        IF vExisteRegistro=0 THEN 
+            pResultado:='NO EXISTEN DATOS QUE ELIMINAR';
+
+            ELSE
 
         UPDATE  SNH_MST_ANTE_SOCIOECONOMICO
         SET 
@@ -1664,6 +2055,7 @@ AS
         WHERE ANTE_SOCIOECONOMICO_ID = pAnteSocioeconomicoId;
 
         pResultado   :='DATOS DE ANTECEDENTES SOCIOECONOMICOS ELIMINADOS  SATISFACTORIAMENTE';
+        END IF ;
     EXCEPTION
         WHEN OTHERS
         THEN
@@ -1792,8 +2184,8 @@ AS
                         NULL;
                 END CASE;
             ELSE
-                --pResultado := 'EL PAR√ÅMETRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
-                pResultado   := 'EL TIPO DE OPERACI√ìN  ES INVALIDO';
+                --pResultado := 'EL PAR¡METRO pTipoOperacion ['||pTipoOperacion|| '] ES INVALIDO';
+                pResultado   := 'EL TIPO DE OPERACI”N  ES INVALIDO';
                 RAISE eParametrosInvalidos;
         END CASE;
     EXCEPTION
@@ -1876,6 +2268,7 @@ END IF;
                            'Edad'                   VALUE HOSPITALARIO.PKG_SNH_EMERGENCIA.FN_OBT_EDAD_PERSONA_HST (PERNOM.FECHA_NACIMIENTO,SYSDATE,'F'),
                            'FechaNacimiento'        VALUE PERNOM.FECHA_NACIMIENTO,
                            'Sexo'                   VALUE NVL (PERNOM.SEXO_VALOR, 0),
+                           'Identificacion'         VALUE NVL (PERNOM.IDENTIFICACION_NUMERO, 'N/D'),
                            'Telefono'               VALUE NVL (PERNOM.TELEFONO, 'N/D'),
                            'DepartamentoNacimiento' VALUE NVL (PERNOM.DEPARTAMENTO_NACIMIENTO_NOMBRE,'N/D'),
                            'MunicipioNacimiento'    VALUE NVL (PERNOM.MUNICIPIO_NACIMIENTO_NOMBRE,'N/D'),
@@ -1893,7 +2286,7 @@ END IF;
                            'EdadGestacional'        VALUE APAR.EDAD_GESTACIONAL,
                            'DuracionParto'          VALUE NVL (APAR.DURACION_PARTO, 0) || ' Horas',
                            'AtencionParto'          VALUE NVL (APAR.VALOR, 'N/D'),
-                           'V√≠a'                    VALUE NVL (VIA.VALOR, 'N/D'),
+                           'VÌa'                    VALUE NVL (VIA.VALOR, 'N/D'),
                            'Presentacion'           VALUE NVL (APAR.PRESENTACION, 'N/D'),
                            'Eventualidades'         VALUE NVL (APAR.EVENTUALIDADES, 'N/D')
                            ),
@@ -1904,7 +2297,7 @@ END IF;
                            'Apgar2'                 VALUE NVL (APOS.APGAR5,0),
                            'Peso'                   VALUE NVL (APOS.PESO, 0)|| ' Gramos',
                            'Talla'                  VALUE NVL (APOS.TALLA,0) || ' Centimetros',
-                           'Asfixia'                VALUE NVL (ASF.VALOR, 'N/D'),
+                           'Asfixia'                VALUE CASE WHEN APOS.ASFIXIA=1 THEN 'SI' ELSE 'NO' END ,
                            'DescripcionAsfixia'     VALUE NVL (APOS.DESCRIPCION_ASFIXIA, 'N/D'),
                            'AlojamientoConjunto'    VALUE NVL (ALOJA.VALOR, 'N/D'),
                            'TiempoMadre'            VALUE NVL (TMAD.VALOR, 'N/D'),
@@ -1940,18 +2333,18 @@ END IF;
                            'Techo'              VALUE NVL (TECHO.VALOR, 'N/D'),
                            'Servicios'          VALUE NVL (ASEC.SERVICIOS_HIGIENICOS, 0),
                            'Habitaciones'       VALUE NVL (ASEC.HABITACIONES, 0),
-                           'Agua'               VALUE NVL (AGUA.VALOR, 'N/D'),
+                           'Agua'               VALUE CASE WHEN ASEC.AGUA=1 THEN 'SI' ELSE 'NO' END ,
                            'LugarAgua'          VALUE NVL (LAGUA.VALOR, 'N/D'),
-                           'Luz'                VALUE NVL (LUZ.VALOR, 'N/D'),
+                           'Luz'                VALUE CASE WHEN ASEC.LUZ=1 THEN 'SI' ELSE 'NO' END,
                            'LugarExcretas'      VALUE NVL (LUEX.VALOR, 'N/D'),
                            'NumeroPersonas'     VALUE NVL (ASEC.NUMERO_PERSONAS, 0),
-                           'Animales'           VALUE NVL (ASEC.ANIMALES, 0),
+                           'Animales'           VALUE CASE WHEN ASEC.ANIMALES=1 THEN 'SI' ELSE 'NO' END,
+                           'Hacimiento'         VALUE CASE WHEN ASEC.HACIMIENTO=1 THEN 'SI' ELSE 'NO' END,
                            'Observaciones'      VALUE NVL (ASEC.OBSERVACIONES, 'N/D'),
-                           'Otros'              VALUE NVL (ASEC.OTROS, 'N/D'),
-                           'Hacimiento'         VALUE NVL (HAC.VALOR, 'N/D')
+                           'Otros'              VALUE NVL (ASEC.OTROS, 'N/D')
                            )
                            )
-                           ) 
+                           )  AS JSON_DATA
 FROM HOSPITALARIO.SNH_MST_HISTORIA_CLINICA  HC
      INNER JOIN HOSPITALARIO.SNH_MST_ADMISION_SERVICIOS ADSE
          ON HC.ADMISION_SERVICIO_ID = ADSE.ADMISION_SERVICIO_ID
@@ -1974,8 +2367,6 @@ FROM HOSPITALARIO.SNH_MST_HISTORIA_CLINICA  HC
      LEFT JOIN CATALOGOS.SBC_CAT_CATALOGOS VIA ON VIA.CATALOGO_ID = APAR.VIA
      LEFT JOIN HOSPITALARIO.SNH_MST_ANTE_POSTNATALES APOS 
           ON APOS.HISTORIA_CLINICA_ID=HC.HISTORIA_CLINICA_ID
-     LEFT JOIN CATALOGOS.SBC_CAT_CATALOGOS ASF 
-           ON ASF.CATALOGO_ID=APOS.ASFIXIA
      LEFT JOIN CATALOGOS.SBC_CAT_CATALOGOS ALOJA
            ON ALOJA.CATALOGO_ID=APOS.ALOJAMIENTO_CONJUNTO
      LEFT JOIN CATALOGOS.SBC_CAT_CATALOGOS TMAD
@@ -1992,16 +2383,11 @@ FROM HOSPITALARIO.SNH_MST_HISTORIA_CLINICA  HC
          ON PISO.CATALOGO_ID = ASEC.PISO
      LEFT JOIN CATALOGOS.SBC_CAT_CATALOGOS TECHO
          ON TECHO.CATALOGO_ID = ASEC.TECHO
-     LEFT JOIN CATALOGOS.SBC_CAT_CATALOGOS AGUA
-         ON AGUA.CATALOGO_ID = ASEC.AGUA
      LEFT JOIN CATALOGOS.SBC_CAT_CATALOGOS LAGUA
          ON LAGUA.CATALOGO_ID = ASEC.LUGAR_AGUA
-     LEFT JOIN CATALOGOS.SBC_CAT_CATALOGOS LUZ ON LUZ.CATALOGO_ID = ASEC.LUZ
      LEFT JOIN CATALOGOS.SBC_CAT_CATALOGOS LUEX
          ON LUEX.CATALOGO_ID = ASEC.LUGAR_EXCRETAS
-     LEFT JOIN CATALOGOS.SBC_CAT_CATALOGOS HAC
-         ON HAC.CATALOGO_ID = ASEC.HACIMIENTO
-WHERE  PERNOM.CODIGO_EXPEDIENTE_ELECTRONICO=pCodigoExpediente
+   WHERE  PERNOM.CODIGO_EXPEDIENTE_ELECTRONICO=pCodigoExpediente
       AND HC.ESTADO_REGISTRO=pEstadoRegistro;
 
 
@@ -2034,3 +2420,4 @@ WHERE  PERNOM.CODIGO_EXPEDIENTE_ELECTRONICO=pCodigoExpediente
     END SNH_R_HISTORIA_CLINICA_JSON;
 
 END PKG_SNH_HISTORIA_CLINICA;
+/
